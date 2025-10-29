@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>醫院管理系統 - 權限設定</title>
+  <style>
+    
+  </style>
+</head>
+
+<body>
+  <header>醫院管理系統</header>
+  <main>
+    <!-- 左側：基本資料 -->
+    <div>
+      <div class="form-list">
+        <div class="field">
+          <div class="label">院所</div>
+          <div class="control">
+            <select class="select" name="hospital" required>
+              <option value="" hidden>　</option>
+              <option>高雄醫學大學附設中和紀念醫院</option>
+              <option>高雄醫學大學附設小港醫院</option>
+              <option>高雄市立旗津醫院</option>
+            </select>
+            <span class="arrow"></span>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="label">科室</div>
+          <div class="control">
+            <select class="select" name="department" required>
+              <option value="" hidden>　</option>
+              <option>職病科</option>
+            </select>
+            <span class="arrow"></span>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="label">職位</div>
+          <div class="control">
+            <select class="select" name="position" required>
+              <option value="" hidden>　</option>
+              <option>個管師</option>
+              <option>醫師</option>
+              <option>護士</option>
+            </select>
+            <span class="arrow"></span>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="label">帳號</div>
+          <div class="control">
+            <input class="input" type="text" name="account" placeholder="目前暫不開放修改" disabled>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="label">密碼</div>
+          <div class="control">
+            <input class="input" type="password" name="password" placeholder="目前暫不開放修改" disabled>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右側：權限勾選 -->
+    <div class="modal">
+      <div class="modal-hd">
+        <span class="hd-search" aria-hidden="true"></span>
+      </div>
+      <div class="modal-bd">
+        <div class="perm-panel">
+          <div class="perm-title">權 限 勾 選</div>
+          <div class="checks">
+            <label><input type="checkbox" name="steps" value="Step1"> Step1</label>
+            <label><input type="checkbox" name="steps" value="Step2"> Step2</label>
+            <label><input type="checkbox" name="steps" value="Step3"> Step3</label>
+          </div>
+        </div>
+        <div class="confirm-wrap">
+          <button class="btn-confirm" type="submit">確定</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  {% if result %}
+  <div class="result">
+    <h3>✅ 已送出資料</h3>
+    <p><strong>院所：</strong>{{ result.hospital or "—" }}</p>
+    <p><strong>科室：</strong>{{ result.department or "—" }}</p>
+    <p><strong>職位：</strong>{{ result.position or "—" }}</p>
+    <p><strong>權限：</strong>
+      {% if result.steps and result.steps|length>0 %}
+        {{ result.steps|join("、") }}
+      {% else %}未勾選{% endif %}
+    </p>
+  </div>
+  {% endif %}
+</body>
+</html>
