@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>新增個案服務紀錄</title>
+    <link rel="stylesheet" href="/static/css/return-to-work-form.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <img
+        src="/static/image_no_bg2.png"
+        alt="Logo"
+        onclick="goHome()"
+        style="cursor: pointer"
+      />
+      <h1>職業災害勞工服務資訊整合管理系統</h1>
+    </header>
+
+    <div class="title-bar">
+      個案服務紀錄 / <span class="highlight-red">新增</span>
+    </div>
+
+    <main class="container">
+      <form action="/submit-service-record/{{ case_id }}" method="POST">
+        <label for="service_date">服務日期</label>
+        <input type="date" name="service_date" required />
+
+        <label for="service_type">服務類型</label>
+        <input
+          type="text"
+          name="service_type"
+          placeholder="例如：心理輔導、轉介資源"
+          required
+        />
+
+        <label for="service_provider_id">服務提供者</label>
+        <input
+          type="text"
+          name="service_provider_id"
+          placeholder="個管師代碼或名稱"
+          required
+        />
+
+        <label for="service_location">服務地點</label>
+        <input
+          type="text"
+          name="service_location"
+          placeholder="例如：病房、電話"
+        />
+
+        <label for="service_description">服務內容描述</label>
+        <textarea name="service_description" rows="4" required></textarea>
+
+        <label for="follow_up_needed">是否需要後續追蹤</label>
+        <select
+          name="follow_up_needed"
+          id="follow_up_needed"
+          onchange="toggleFollowUpDate()"
+        >
+          <option value="0">否</option>
+          <option value="1">是</option>
+        </select>
+
+        <div id="followUpDateGroup" style="display: none">
+          <label for="follow_up_date">預計追蹤日期</label>
+          <input type="date" name="follow_up_date" />
+        </div>
+
+        <label for="notes">其他備註</label>
+        <textarea name="notes" rows="3"></textarea>
+
+        <div class="button-group">
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-save"></i> 提交紀錄
+          </button>
+          <a href="/case-detail/{{ case_id }}" class="cancel-btn">
+            <i class="fas fa-arrow-left"></i> 返回個案資料
+          </a>
+        </div>
+      </form>
+    </main>
+
+    <script>
+      function toggleFollowUpDate() {
+        const show = document.getElementById("follow_up_needed").value === "1";
+        document.getElementById("followUpDateGroup").style.display = show
+          ? "block"
+          : "none";
+      }
+
+      function goHome() {
+        window.location.href = "/home";
+      }
+
+      document.addEventListener("DOMContentLoaded", toggleFollowUpDate);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>功能關閉</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/step1.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .container {
+            text-align: center;
+            padding-top: 50px;
+        }
+        .icon {
+            font-size: 5rem;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+        .message {
+            font-size: 1.5rem;
+            color: #34495e;
+            margin-bottom: 30px;
+        }
+        .back-btn {
+            background: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+      <img
+        src="{{ url_for('static', filename='image_no_bg2.png') }}"
+        alt="Logo"
+        onclick="goHome()"
+      />
+      <h1>職業災害勞工服務資訊整合管理系統</h1>
+    </header>
+
+    <div class="title-bar">系統提示</div>
+
+    <main class="container">
+        <div class="icon">
+            <i class="fas fa-power-off"></i>
+        </div>
+        <div class="message">
+            <h2>此功能模組目前為關閉狀態</h2>
+            <p>{{ message }}</p>
+        </div>
+        <a href="/home" class="back-btn">
+            <i class="fas fa-home"></i> 返回首頁
+        </a>
+    </main>
+
+    <script>
+        function goHome() {
+            window.location.href = "/home";
+        }
+    </script>
+</body>
+</html>

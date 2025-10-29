@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step1 新增個案</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/static/css/step1.css" />
+  </head>
+  <body>
+    <header>
+      <img
+        src="{{ url_for('static', filename='image_no_bg2.png') }}"
+        alt="Logo"
+        onclick="goHome()"
+      />
+      <h1>職業災害勞工服務資訊整合管理系統</h1>
+    </header>
+
+    <div class="title-bar">個案管理 / <span class="highlight">Step1 新增個案</span></div>
+
+    <main class="container">
+      <!-- 自動儲存提示 -->
+      <div id="saveNotice">
+        ✔️ 已自動儲存
+      </div>
+
+      {% if success %}
+      <div class="success-message">
+        <i class="fas fa-check-circle"></i>
+        {{ success }}
+        <a
+          href="/step2"
+          style="color: #27ae60; text-decoration: underline; margin-left: 10px; font-weight: 600;"
+          >前往Step2查看個案</a
+        >
+      </div>
+      {% endif %} 
+      
+      {% if error %}
+      <div class="error-message">
+        <i class="fas fa-exclamation-triangle"></i>
+        {{ error }}
+      </div>
+      {% endif %}
+
+      <form action="/step1" method="post">
+        <div class="form-content">
+          <div class="form-section">
+            <h2 class="section-title">
+              <i class="fas fa-user-plus section-icon"></i>
+              基本資料
+            </h2>
+            
+            <div class="form-group">
+              <label for="medical_record_no" class="required-field">病歷號</label>
+              <input
+                type="text"
+                id="medical_record_no"
+                name="medical_record_no"
+                class="form-control"
+                placeholder="請輸入8位數字病歷號"
+                required
+                maxlength="8"
+                pattern="\d{8}"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8)"
+                onblur="autoSave()"
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="patient_name">個案姓名</label>
+              <input
+                type="text"
+                id="patient_name"
+                name="patient_name"
+                class="form-control"
+                placeholder="請輸入個案姓名"
+                onblur="autoSave()"
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="birth_date">出生日期</label>
+              <input
+                type="date"
+                id="birth_date"
+                name="birth_date"
+                class="form-control"
+                onblur="autoSave()"
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="gender">性別</label>
+              <select id="gender" name="gender" class="form-control" onblur="autoSave()">
+                <option value="" disabled selected hidden>請選擇性別</option>
+                <option value="1">男</option>
+                <option value="2">女</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="id_document_type">身分證號類別</label>
+              <select
+                id="id_document_type"
+                name="id_document_type"
+                class="form-control"
+                onblur="autoSave()"
+              >
+                <option value="" disabled selected hidden>請選擇證件類別</option>
+                <option value="1">身分證號</option>
+                <option value="2">護照號碼</option>
+                <option value="3">居留證號</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="id_document_no" class="required-field">身分證號</label>
+              <input
+                type="text"
+                id="id_document_no"
+                name="id_document_no"
+                class="form-control"
+                placeholder="請輸入身分證號碼"
+                maxlength="10"
+                pattern="[A-Z][0-9]{9}"
+                oninput="this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10)"
+                onblur="autoSave()"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button type="button" class="cancel-btn" onclick="confirmReturn()">
+            <i class="fas fa-arrow-left"></i> 返回
+          </button>
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-save"></i> 送出
+          </button>
+        </div>
+      </form>
+    </main>
+
+    <script>
+      function goHome() {
+        window.location.href = "/home";
+      }
+
+      function confirmReturn() {
+        document.getElementById("returnModal").style.display = "flex";
+        document.addEventListener("keydown", returnModalKeyHandler);
+      }
+
+      function confirmReturnOk() {
+        window.location.href = "/home";
+      }
+
+      function closeReturnModal() {
+        document.getElementById("returnModal").style.display = "none";
+        document.removeEventListener("keydown", returnModalKeyHandler);
+      }
+
+      function returnModalKeyHandler(event) {
+        if (event.key === "Enter") {
+          confirmReturnOk();
+        }
+      }
+    </script>
+
+    <!-- 提示彈窗 -->
+    <div id="alertModal" style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    ">
+      <div style="
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        text-align: center;
+        max-width: 400px;
+        margin: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      ">
+        <p id="modalMessage" style="
+          color: #2c3e50;
+          font-size: 16px;
+          font-weight: 600;
+          margin-bottom: 20px;
+        "></p>
+        <button onclick="closeModal()" style="
+          background: linear-gradient(135deg, #4facfe, #00f2fe);
+          color: white;
+          border: none;
+          padding: 12px 30px;
+          border-radius: 25px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: transform 0.2s ease;
+        " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          確定
+        </button>
+      </div>
+    </div>
+
+    <!-- 返回確認彈窗 -->
+    <div id="returnModal" style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    ">
+      <div style="
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        text-align: center;
+        max-width: 400px;
+        margin: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      ">
+        <p style="
+          color: #2c3e50;
+          font-size: 16px;
+          font-weight: 600;
+          margin-bottom: 20px;
+        ">確定要返回首頁嗎？未儲存的資料將會遺失。</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button onclick="confirmReturnOk()" style="
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+          " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            確定返回
+          </button>
+          <button onclick="closeReturnModal()" style="
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+          " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            取消
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 引入step1.js -->
+    <script src="{{ url_for('static', filename='js/step1.js') }}"></script>
+  </body>
+</html>

@@ -1,0 +1,313 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>個案查詢 - 職業災害勞工服務資訊整合管理系統</title>
+  <link rel="stylesheet" href="/static/css/case-query.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <!-- 頁首 -->
+  <header>
+    <div class="header-content">
+      <div class="logo-section" onclick="goHome()">
+        <img src="/static/image_no_bg2.png" alt="Logo" />
+        <h1>職業災害勞工服務資訊整合管理系統</h1>
+      </div>
+      <nav class="header-nav">
+        <a href="/home" class="nav-link">
+          <i class="fas fa-home"></i>
+          <span>首頁</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 標題區域 -->
+  <div class="page-title">
+    <div class="title-content">
+      <i class="fas fa-search"></i>
+      <h2>個案查詢</h2>
+    </div>
+  </div>
+
+  <!-- 主容器 -->
+  <main class="container">
+    <!-- 搜尋區域 -->
+    <div class="search-container">
+      <div class="search-header">
+        <h3>
+          <i class="fas fa-filter"></i>
+          搜尋條件
+        </h3>
+        <button type="button" class="expand-btn" onclick="toggleAdvancedSearch()">
+          <i class="fas fa-chevron-down"></i>
+          進階搜尋
+        </button>
+      </div>
+      
+      <form class="search-form" id="searchForm">
+        <div class="basic-search">
+          <div class="form-group">
+            <label for="search_field">搜尋欄位</label>
+            <select name="search_field" id="search_field" class="form-control">
+              <option value="">全部欄位</option>
+              <option value="medical_record_no" {{ 'selected' if search_field == 'medical_record_no' }}>病歷號</option>
+              <option value="patient_name" {{ 'selected' if search_field == 'patient_name' }}>姓名</option>
+              <option value="birth_date" {{ 'selected' if search_field == 'birth_date' }}>出生日期</option>
+              <option value="id_document_no" {{ 'selected' if search_field == 'id_document_no' }}>身分證號</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="keyword">關鍵字</label>
+            <div class="input-with-icon">
+              <input type="text" 
+                     name="keyword" 
+                     id="keyword"
+                     placeholder="請輸入查詢關鍵字" 
+                     class="form-control"
+                     value="{{ keyword or '' }}" />
+              <i class="fas fa-search input-icon"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="advanced-search" id="advancedSearch" style="display: none;">
+          <div class="form-group">
+            <label for="gender_filter">性別</label>
+            <select name="gender_filter" id="gender_filter" class="form-control">
+              <option value="">不限</option>
+              <option value="1">男性</option>
+              <option value="2">女性</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="date_from">建檔日期（起）</label>
+            <input type="date" name="date_from" id="date_from" class="form-control" />
+          </div>
+          
+          <div class="form-group">
+            <label for="date_to">建檔日期（迄）</label>
+            <input type="date" name="date_to" id="date_to" class="form-control" />
+          </div>
+        </div>
+
+        <div class="search-buttons">
+          <button type="button" class="btn btn-primary" onclick="performSearch()">
+            <i class="fas fa-search"></i>
+            搜尋
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="resetSearch()">
+            <i class="fas fa-times"></i>
+            清除
+          </button>
+          <button type="button" class="btn btn-success" onclick="exportResults()">
+            <i class="fas fa-download"></i>
+            匯出
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 結果區域 -->
+    <div class="results-container" id="resultsContainer">
+      <div class="results-header">
+        <div class="results-title">
+          <i class="fas fa-list"></i>
+          查詢結果
+        </div>
+        <div class="results-actions">
+          <span class="results-count" id="resultsCount">
+            {% if cases %}共 {{ cases|length }} 筆{% else %}查無資料{% endif %}
+          </span>
+          <div class="view-controls">
+            <button class="view-btn active" data-view="table" onclick="switchView('table')">
+              <i class="fas fa-table"></i>
+            </button>
+            <button class="view-btn" data-view="grid" onclick="switchView('grid')">
+              <i class="fas fa-th"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 表格檢視 -->
+      <div class="table-view" id="tableView">
+        <div class="table-wrapper">
+          <table class="case-table">
+            <thead>
+              <tr>
+                <th class="sortable" data-sort="medical_record_no">
+                  病歷號 <i class="fas fa-sort"></i>
+                </th>
+                <th class="sortable" data-sort="patient_name">
+                  姓名 <i class="fas fa-sort"></i>
+                </th>
+                <th class="sortable" data-sort="gender">
+                  性別 <i class="fas fa-sort"></i>
+                </th>
+                <th class="sortable" data-sort="birth_date">
+                  出生日期 <i class="fas fa-sort"></i>
+                </th>
+                <th class="sortable" data-sort="id_document_no">
+                  身分證號 <i class="fas fa-sort"></i>
+                </th>
+                <th class="sortable" data-sort="created_at">
+                  建檔日期 <i class="fas fa-sort"></i>
+                </th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="caseTableBody">
+              {% if cases %}
+                {% for case in cases %}
+                <tr class="case-row" data-case-id="{{ case.medical_record_no }}">
+                  <td class="medical-record">
+                    <strong>{{ case.medical_record_no }}</strong>
+                  </td>
+                  <td class="patient-name">{{ case.patient_name or '未填寫' }}</td>
+                  <td class="gender">
+                    {% if case.gender == "1" %}
+                      <span class="badge badge-blue">男性</span>
+                    {% elif case.gender == "2" %}
+                      <span class="badge badge-pink">女性</span>
+                    {% else %}
+                      <span class="badge badge-gray">未填寫</span>
+                    {% endif %}
+                  </td>
+                  <td class="birth-date">{{ case.birth_date or '未填寫' }}</td>
+                  <td class="id-document">{{ case.id_document_no or '未填寫' }}</td>
+                  <td class="created-date">
+                    {% if case.created_at %}
+                      {{ case.created_at.split('T')[0] }}
+                    {% else %}
+                      未填寫
+                    {% endif %}
+                  </td>
+                  <td class="actions">
+                    <div class="action-buttons">
+                      <a href="/case-detail/{{ case.medical_record_no }}" class="btn-action btn-view" title="檢視詳細">
+                        <i class="fas fa-eye"></i>
+                      </a>
+                      <a href="/step2/{{ case.medical_record_no }}" class="btn-action btn-edit" title="編輯">
+                        <i class="fas fa-edit"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 卡片檢視 -->
+      <div class="grid-view" id="gridView" style="display: none;">
+        <div class="cases-grid" id="casesGrid">
+          {% if cases %}
+            {% for case in cases %}
+            <div class="case-card" data-case-id="{{ case.medical_record_no }}">
+              <div class="case-header">
+                <div class="case-id">
+                  <i class="fas fa-id-card"></i>
+                  {{ case.medical_record_no }}
+                </div>
+                <div class="case-status">
+                  {% if case.gender == "1" %}
+                    <span class="badge badge-blue">男性</span>
+                  {% elif case.gender == "2" %}
+                    <span class="badge badge-pink">女性</span>
+                  {% else %}
+                    <span class="badge badge-gray">未填寫</span>
+                  {% endif %}
+                </div>
+              </div>
+              
+              <div class="case-info">
+                <div class="info-row">
+                  <span class="label">姓名：</span>
+                  <span class="value">{{ case.patient_name or '未填寫' }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">出生日期：</span>
+                  <span class="value">{{ case.birth_date or '未填寫' }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">身分證號：</span>
+                  <span class="value">{{ case.id_document_no or '未填寫' }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">建檔日期：</span>
+                  <span class="value">
+                    {% if case.created_at %}
+                      {{ case.created_at.split('T')[0] }}
+                    {% else %}
+                      未填寫
+                    {% endif %}
+                  </span>
+                </div>
+              </div>
+              
+              <div class="case-actions">
+                <a href="/case-detail/{{ case.medical_record_no }}" class="btn btn-primary btn-sm">
+                  <i class="fas fa-eye"></i>
+                  檢視
+                </a>
+                <a href="/step2/{{ case.medical_record_no }}" class="btn btn-secondary btn-sm">
+                  <i class="fas fa-edit"></i>
+                  編輯
+                </a>
+              </div>
+            </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- 空狀態 -->
+      {% if not cases %}
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="fas fa-search"></i>
+        </div>
+        <h3>查無符合條件的個案資料</h3>
+        <p>請嘗試調整搜尋條件，或<a href="/step1" class="link">新增個案</a></p>
+      </div>
+      {% endif %}
+
+      <!-- 分頁控制 -->
+      <div class="pagination" id="pagination" style="display: none;">
+        <div class="pagination-info">
+          顯示第 <span id="pageStart">1</span> - <span id="pageEnd">10</span> 筆，共 <span id="totalRecords">0</span> 筆
+        </div>
+        <div class="pagination-buttons">
+          <button class="pagination-btn" id="prevBtn" onclick="changePage(-1)">
+            <i class="fas fa-chevron-left"></i>
+            上一頁
+          </button>
+          <div class="page-numbers" id="pageNumbers"></div>
+          <button class="pagination-btn" id="nextBtn" onclick="changePage(1)">
+            下一頁
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 載入遮罩 -->
+  <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <p>查詢中...</p>
+    </div>
+  </div>
+
+  <script src="/static/js/case-query.js"></script>
+</body>
+</html>

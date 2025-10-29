@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>新增ADL/IADL評估量表</title>
+    <link rel="stylesheet" href="/static/css/return-to-work-form.css" />
+  </head>
+  <body>
+    <header>
+      <img src="/static/image_no_bg2.png" alt="Logo" onclick="goHome()" />
+      <h1>職業災害勞工服務資訊整合管理系統</h1>
+    </header>
+
+    <div class="title-bar">
+      ADL/IADL評估量表 / <span class="highlight-red">新增</span>
+    </div>
+    <div class="form-container">
+      <h2>ADL / IADL 評估量表</h2>
+      <form action="/submit-adl-iadl/{{ case_id }}" method="POST">
+        <fieldset>
+          <legend>基本資訊</legend>
+          <label>評估日期：</label>
+          <input type="date" name="assessment_date" required />
+          <label>評估者：</label>
+          <input type="text" name="assessor" required />
+        </fieldset>
+
+        <fieldset>
+          <legend>ADL 項目（選擇分數）</legend>
+          {% for field, label, options in [ ('eating', '進食', [10,5,0]),
+          ('bathing', '洗澡', [5,0]), ('personal_hygiene', '個人衛生', [5,0]),
+          ('dressing', '穿脫衣服', [10,5,0]), ('bowel_control', '排便控制',
+          [10,5,0]), ('bladder_control', '排尿控制', [10,5,0]), ('toilet_use',
+          '如廁', [10,5,0]), ('transfer', '輪椅與床位間的移動', [15,10,5,0]),
+          ('walking_on_level_surface', '平地行走', [15,10,5,0]),
+          ('stair_climbing', '上下樓梯', [10,5,0]) ] %}
+          <label>{{ label }}</label>
+          <select name="{{ field }}" required>
+            <option value="">請選擇</option>
+            {% for val in options %}
+            <option value="{{ val }}">{{ val }}</option>
+            {% endfor %}
+          </select>
+          {% endfor %}
+        </fieldset>
+
+        <fieldset>
+          <legend>IADL 項目（選擇分數）</legend>
+          {% for field, label, options in [ ('telephone_use', '使用電話',
+          [3,2,1,0]), ('shopping', '上街購物', [3,2,1,0]), ('food_preparation',
+          '食物烹調', [3,2,1,0]), ('housekeeping', '家務維持', [4,3,2,1,0]),
+          ('laundry', '洗衣服', [2,1,0]), ('mode_of_transportation', '外出活動',
+          [4,3,2,1,0]), ('medication_management', '服用藥物', [3,2,1,0]),
+          ('financial_management', '財務處理', [2,1,0]) ] %}
+          <label>{{ label }}</label>
+          <select name="{{ field }}" required>
+            <option value="">請選擇</option>
+            {% for val in options %}
+            <option value="{{ val }}">{{ val }}</option>
+            {% endfor %}
+          </select>
+          {% endfor %}
+        </fieldset>
+
+        <button type="submit" class="submit-btn">送出評估</button>
+      </form>
+      <a href="/case-detail/{{ case_id }}" class="back-btn">← 返回個案資料</a>
+    </div>
+    <script>
+      function goHome() {
+        window.location.href = "/home";
+      }
+      function goBack() {
+        window.location.href = "/case-detail";
+      }
+    </script>
+  </body>
+</html>

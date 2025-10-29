@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>個案詳細資料</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/case-detail.css') }}"
+    />
+  </head>
+  <body>
+    <div class="detail-container">
+      <h2>個案詳細資料</h2>
+
+      <!-- 基本資料 -->
+      <div class="detail-header">
+        <div class="detail-info">
+          <!-- 第一行 -->
+          <div class="info-row">
+            <div class="info-cell">病歷號：{{ case.medical_record_no }}</div>
+            <div class="info-cell">姓名：{{ case.patient_name }}</div>
+            <div class="info-cell">
+              性別： {% if case.gender == "1" %} 男 {% elif case.gender == "2"
+              %} 女 {% else %} - {% endif %}
+            </div>
+          </div>
+
+          <!-- 第二行 -->
+          <div class="info-row">
+            <div class="info-cell">出生日期：{{ case.birth_date }}</div>
+            <div class="info-cell">身分證號：{{ case.id_document_no }}</div>
+            <div class="info-cell select-wrapper">
+              <label for="visitDateSelect">選擇收案日期：</label>
+              <select
+                id="visitDateSelect"
+                onchange="updateProgressView()"
+                {%
+                if
+                not
+                case.visit_dates
+                %}disabled{%
+                endif
+                %}
+              >
+                {% if case.visit_dates %} {% for date in case.visit_dates %}
+                <option
+                  value="{{ date }}"
+                  {%
+                  if
+                  loop.last
+                  %}selected{%
+                  endif
+                  %}
+                >
+                  {{ date.replace('-', '/') }}
+                </option>
+                {% endfor %} {% else %}
+                <option>無可用日期</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 快速新增功能按鈕區塊 -->
+      <div class="quick-actions">
+        <a href="/phone-followups/{{ case.medical_record_no }}">
+          <button class="quick-btn">📞 電訪紀錄</button>
+        </a>
+        <a href="/add-service-record/{{ case.medical_record_no }}">
+          <button class="quick-btn">📋 個案服務紀錄</button>
+        </a>
+
+        <a href="/adl-iadl-form/{{ case.medical_record_no }}">
+          <button class="quick-btn">🧮 ADL/IADL量表</button>
+        </a>
+        <a href="/return-to-work-form/{{ case.medical_record_no }}">
+          <button class="quick-btn">⛑️ 復工紀錄</button>
+        </a>
+      </div>
+
+      <!-- 模組進度（2欄） -->
+      <div class="module-grid">
+        {% for module in [ ('個案訪談', 'interview_progress', '/interview/' ~
+        case.medical_record_no, '📝'), ('電話關懷', 'call_progress',
+        '/phone-care/' ~ case.medical_record_no, '📞'), ('服務紀錄',
+        'service_progress', '/service-record/' ~ case.medical_record_no, '📋'),
+        ('復工追蹤', 'return_progress', '/return-to-work/' ~
+        case.medical_record_no, '⛑️') ] %}
+        <div class="section" title="{{ module[0] }}進度說明">
+          <h3><span class="icon">{{ module[3] }}</span> {{ module[0] }}進度</h3>
+          <div class="progress-bar progress-{{ module[1] }}">
+            <div class="progress" data-progress="{{ case[module[1]] }}">0%</div>
+          </div>
+          <a href="{{ module[2] }}">
+            <button class="action-btn">進入{{ module[0] }}</button>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+
+      <a href="/case-query" class="back-btn">返回查詢</a>
+    </div>
+
+    <!-- 進度條動畫 -->
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".progress").forEach((el) => {
+          const target = parseInt(el.dataset.progress);
+          let current = 0;
+          const step = Math.ceil(target / 20);
+          const speed = 15;
+
+          const interval = setInterval(() => {
+            current += step;
+            if (current >= target) {
+              current = target;
+              clearInterval(interval);
+            }
+            el.textContent = current + "%";
+            el.style.width = current + "%";
+          }, speed);
+        });
+      });
+    </script>
+  </body>
+</html>

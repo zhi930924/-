@@ -1,0 +1,18 @@
+flask
+flask-mail
+tinydb
+bcrypt
+python-dateutil
+python-dotenv
+openai
+
+# Optional dependencies (install only if using speech recognition)
+# SpeechRecognition
+# PyAudio
+bcrypt
+flask
+flask-mail
+openai
+python-dateutil
+python-dotenv
+tinydb

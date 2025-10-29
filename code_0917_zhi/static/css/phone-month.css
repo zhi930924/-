@@ -1,0 +1,418 @@
+@import url('./design-system.css');
+
+/* ================================
+   電話關懷管理頁面樣式
+   ================================ */
+
+body {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+}
+
+/* ================================
+   頁首區域
+   ================================ */
+
+header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+  color: white;
+  padding: var(--spacing-4);
+  display: flex;
+  align-items: center;
+  box-shadow: var(--shadow-md);
+}
+
+header img {
+  cursor: pointer;
+  height: 40px;
+  margin-right: var(--spacing-4);
+  border-radius: var(--radius-md);
+}
+
+header h1 {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin: 0;
+}
+
+/* ================================
+   標題區域
+   ================================ */
+
+.title-bar {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, #f8f1d4 100%);
+  padding: var(--spacing-6);
+  border-bottom: 3px solid var(--primary-color);
+  text-align: center;
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--primary-color);
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--spacing-8);
+}
+
+.title-bar span {
+  color: var(--secondary-color);
+}
+
+/* ================================
+   主容器
+   ================================ */
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--spacing-6);
+}
+
+/* ================================
+   統計卡片
+   ================================ */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-5);
+  margin-bottom: var(--spacing-8);
+}
+
+.stat-card {
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-5);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  border-left: 4px solid var(--secondary-color);
+  transition: all var(--transition-base);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.stat-card .number {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-2);
+}
+
+.stat-card .label {
+  font-size: var(--font-size-sm);
+  color: var(--gray-600);
+  font-weight: 500;
+}
+
+/* ================================
+   篩選控制
+   ================================ */
+
+.filter-container {
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-5);
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--spacing-6);
+}
+
+.filter-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-4);
+  align-items: end;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: var(--spacing-3);
+}
+
+/* ================================
+   名單表格
+   ================================ */
+
+.list-container {
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.list-header {
+  background: var(--bg-secondary);
+  padding: var(--spacing-5);
+  border-bottom: 2px solid var(--primary-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.list-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.list-actions {
+  display: flex;
+  gap: var(--spacing-3);
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.phone-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.phone-table th,
+.phone-table td {
+  padding: var(--spacing-4) var(--spacing-3);
+  text-align: left;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.phone-table th {
+  background: var(--bg-muted);
+  font-weight: 600;
+  color: var(--gray-700);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: sticky;
+  top: 0;
+}
+
+.phone-table tbody tr:hover {
+  background: rgba(52, 152, 219, 0.05);
+}
+
+.phone-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ================================
+   狀態標籤
+   ================================ */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-pending {
+  background: rgba(243, 156, 18, 0.1);
+  color: var(--warning-color);
+  border: 1px solid var(--warning-color);
+}
+
+.status-completed {
+  background: rgba(39, 174, 96, 0.1);
+  color: var(--success-color);
+  border: 1px solid var(--success-color);
+}
+
+.status-failed {
+  background: rgba(231, 76, 60, 0.1);
+  color: var(--accent-color);
+  border: 1px solid var(--accent-color);
+}
+
+/* ================================
+   操作按鈕
+   ================================ */
+
+.action-buttons {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.btn-call {
+  background: linear-gradient(135deg, var(--success-color) 0%, #2ecc71 100%);
+  color: white;
+  padding: var(--spacing-2) var(--spacing-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.btn-call:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+}
+
+.btn-record {
+  background: linear-gradient(135deg, var(--info-color) 0%, #3498db 100%);
+  color: white;
+  padding: var(--spacing-2) var(--spacing-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.btn-record:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(23, 162, 184, 0.3);
+}
+
+/* ================================
+   分頁控制
+   ================================ */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-5);
+  background: var(--bg-muted);
+}
+
+.pagination-info {
+  color: var(--gray-600);
+  font-size: var(--font-size-sm);
+}
+
+.pagination-buttons {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.pagination-btn {
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--gray-300);
+  background: var(--bg-primary);
+  color: var(--gray-700);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-size: var(--font-size-xs);
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: var(--secondary-color);
+  color: white;
+  border-color: var(--secondary-color);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-btn.active {
+  background: var(--secondary-color);
+  color: white;
+  border-color: var(--secondary-color);
+}
+
+/* ================================
+   響應式設計
+   ================================ */
+
+@media (max-width: 768px) {
+  header {
+    padding: var(--spacing-3) var(--spacing-2);
+  }
+  
+  .title-bar {
+    padding: var(--spacing-4) var(--spacing-2);
+    font-size: var(--font-size-lg);
+  }
+  
+  .container {
+    padding: var(--spacing-2);
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-2);
+  }
+
+  .filter-container {
+    padding: var(--spacing-3);
+  }
+
+  .filter-form {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2);
+  }
+
+  .filter-buttons {
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  .list-header {
+    flex-direction: column;
+    gap: var(--spacing-2);
+    text-align: center;
+    padding: var(--spacing-3);
+  }
+
+  .list-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .phone-table {
+    min-width: 600px;
+  }
+
+  .phone-table th,
+  .phone-table td {
+    padding: var(--spacing-2);
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3);
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: var(--spacing-3);
+  }
+
+  .stat-card .number {
+    font-size: var(--font-size-xl);
+  }
+}

@@ -1,0 +1,34 @@
+{% extends "layout.html" %} {% block content %}
+<div class="form-container">
+  <h2>ADL / IADL 評估紀錄</h2>
+
+  {% if records|length == 0 %}
+  <p>尚無此個案的評估資料。</p>
+  {% else %}
+  <table class="history-table">
+    <thead>
+      <tr>
+        <th>評估日期</th>
+        <th>評估者</th>
+        <th>ADL 總分</th>
+        <th>ADL 分級</th>
+        <th>IADL 總分</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+      <tr>
+        <td>{{ r.assessment_date }}</td>
+        <td>{{ r.assessor }}</td>
+        <td>{{ r.adl_score }}</td>
+        <td>{{ r.adl_level }}</td>
+        <td>{{ r.iadl_score }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  <a href="/case-detail/{{ case_id }}" class="back-btn">← 返回個案資料</a>
+</div>
+{% endblock %}

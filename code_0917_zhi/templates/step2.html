@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Step2 個案訪談</title>
+    <link rel="stylesheet" href="/static/css/step2.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <img src="/static/image_no_bg2.png" alt="Logo" onclick="goHome()" />
+      <h1>職業災害勞工服務資訊整合管理系統</h1>
+    </header>
+
+    <div class="title-bar">個案管理 / <span>Step2 選擇個案</span></div>
+
+    <main class="container">
+      <div class="info-message">
+        所有在 Step1 建立的個案皆可進行 Step2
+        訪談。新增個案後，請在此頁面選擇進行訪談。
+      </div>
+
+      <!-- 搜尋區域 -->
+      <div class="search-container">
+        <div class="search-header">
+          <h2><i class="fas fa-search"></i>即時搜索個案</h2>
+        </div>
+        <form id="searchForm" class="search-bar" method="get" action="/step2">
+          <label class="search-label">查詢條件</label>
+          <div class="search-field-group">
+            <select
+              name="search_field"
+              id="search_field"
+              class="search-field-select"
+              required
+            >
+              <option value="" disabled selected hidden>選擇欄位</option>
+              <option value="all">全部欄位</option>
+              <option value="medical_record_no">病歷號</option>
+              <option value="patient_name">姓名</option>
+              <option value="birth_date">生日</option>
+              <option value="id_document_no">身分證</option>
+            </select>
+            <input
+              type="text"
+              name="keyword"
+              placeholder="請輸入查詢關鍵字..."
+              class="searchInput"
+              value="{{ keyword or '' }}"
+            />
+          </div>
+          <button type="button" class="clear-btn" onclick="resetSearch()">
+            <i class="fa-solid fa-times"></i> 清除
+          </button>
+        </form>
+      </div>
+
+      <div class="quick-action">
+        <a href="/step3">
+          <button
+            style="
+              background-color: #2c3e50;
+              color: white;
+              padding: 8px 16px;
+              border: none;
+              border-radius: 6px;
+              cursor: pointer;
+            "
+          >
+            ⬆️ 前往 Step3
+          </button>
+        </a>
+      </div>
+
+      <!-- 查詢結果統計 -->
+      {% if cases %}
+      <div class="results-header">
+        <div class="results-count">
+          <i class="fas fa-list-ul"></i>
+          查詢結果：共 <span class="count-number">{{ cases|length }}</span> 筆個案
+        </div>
+        <div class="results-summary">
+          <i class="fas fa-info-circle"></i>
+          顯示所有符合條件的個案資料
+        </div>
+      </div>
+
+      <!-- 個案列表 -->
+      <div class="cases-container">
+        <div class="cases-grid">
+          {% for case in cases %}
+          <div class="case-card">
+            <div class="case-header">
+              <div class="case-id">
+                <i class="fas fa-id-card"></i>
+                {{ case.medical_record_no }}
+              </div>
+              <div class="case-status">可訪談</div>
+            </div>
+
+            <div class="case-info">
+              <div class="info-row">
+                <span class="info-label">
+                  <i class="fas fa-user"></i>
+                  姓名
+                </span>
+                <span class="info-value">{{ case.patient_name or '未填寫' }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">
+                  <i class="fas fa-venus-mars"></i>
+                  性別
+                </span>
+                <span class="info-value">
+                  {% if case.gender == "1" %}男性
+                  {% elif case.gender == "2" %}女性
+                  {% else %}未填寫{% endif %}
+                </span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">
+                  <i class="fas fa-calendar-alt"></i>
+                  出生日期
+                </span>
+                <span class="info-value">{{ case.birth_date or '未填寫' }}</span>
+              </div>
+            </div>
+
+            <div class="case-actions">
+              <a href="/step2/{{ case.medical_record_no }}" class="interview-btn">
+                <i class="fas fa-notes-medical"></i>
+                開始訪談
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <i class="fas fa-search"></i>
+        <h3>查無符合條件的個案資料</h3>
+        <p>請嘗試調整查詢條件或<a href="/step1">新增個案</a></p>
+      </div>
+      {% endif %}
+    </main>
+
+    <script src="/static/js/step2.js"></script>
+    <script>
+      function resetSearch() {
+        document.getElementById("search_field").value = "";
+        document.querySelector("input[name='keyword']").value = "";
+        window.location.href = "/step2";
+      }
+
+      function goHome() {
+        window.location.href = "/home";
+      }
+    </script>
+  </body>
+</html>

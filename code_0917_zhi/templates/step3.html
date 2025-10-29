@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Step3 預覽編輯</title>
+    <link rel="stylesheet" href="/static/css/step3.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <img
+        src="/static/image_no_bg2.png"
+        alt="Logo"
+        onclick="goHome()"
+        style="cursor: pointer"
+      />
+      <h1>職業災害勞工服務資訊整合管理系統</h1>
+    </header>
+
+    <div class="title-bar">個案管理 / <span>Step3 預覽編輯</span></div>
+
+    <div class="container">
+      <!-- 搜尋區域 -->
+      <div class="search-section">
+        <div class="search-header">
+          <h2><i class="fas fa-search"></i> 個案搜尋</h2>
+        </div>
+        <div class="search-form">
+          <div class="search-row">
+            <select id="searchField" class="search-field">
+              <option value="">全部欄位</option>
+              <option value="medical_record_no">病歷號</option>
+              <option value="patient_name">姓名</option>
+              <option value="id_document_no">身分證件號碼</option>
+            </select>
+            <input 
+              type="text" 
+              id="searchInput" 
+              placeholder="輸入搜尋關鍵字..." 
+              class="search-input"
+            />
+            <button type="button" class="search-btn" onclick="clearSearch()">
+              <i class="fas fa-times"></i> 清除
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 個案列表 -->
+      <div class="cases-section">
+        <div class="cases-header">
+          <h2><i class="fas fa-list"></i> 個案列表</h2>
+          <span class="case-count" id="caseCount">載入中...</span>
+        </div>
+
+        <div id="casesContainer">
+          <div class="loading-message">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>載入個案資料中...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 返回按鈕 -->
+      <div class="back-section">
+        <button class="back-btn" onclick="goHome()">
+          <i class="fas fa-home"></i> 返回首頁
+        </button>
+      </div>
+    </div>
+
+    <script src="/static/js/step3.js"></script>
+    <script>
+      function goHome() {
+        window.location.href = "/home";
+      }
+
+      function editCase(medicalRecordNo) {
+        window.location.href = `/step3/${medicalRecordNo}`;
+      }
+    </script>
+  </body>
+</html>

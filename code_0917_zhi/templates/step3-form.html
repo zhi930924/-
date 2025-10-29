@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Step3 預覽編輯</title>
+    <link rel="stylesheet" href="/static/css/step2-form.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <script src="/static/js/step2-form.js"></script>
+    <script src="/static/js/step3-form.js"></script>
+  </head>
+  <body>
+    <header>
+      <img src="/static/image_no_bg2.png" alt="Logo" onclick="goHome()" />
+      <h1>職業災害勞工服務資訊整合管理系統</h1>
+    </header>
+
+    <div class="title-bar">個案管理 / Step3 預覽編輯</div>
+
+    <form action="/submit-step3/{{ case.medical_record_no }}" method="POST">
+      <!-- Step2 基本資料欄位 -->
+      <div class="form-section">
+        <h2><i class="fas fa-user"></i> 基本資料</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label>病歷號 *</label>
+            <input type="text" name="medical_record_no" value="{{ case.medical_record_no }}" readonly>
+          </div>
+          <div class="form-group">
+            <label>姓名 *</label>
+            <input type="text" name="patient_name" value="{{ case.patient_name }}" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>性別 *</label>
+            <select name="gender" required>
+              <option value="">請選擇</option>
+              <option value="1" {% if case.gender == "1" %}selected{% endif %}>男</option>
+              <option value="0" {% if case.gender == "0" %}selected{% endif %}>女</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>出生日期 *</label>
+            <input type="date" name="birth_date" value="{{ case.birth_date }}" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>身分證件類型</label>
+            <select name="id_document_type">
+              <option value="">請選擇</option>
+              <option value="身分證" {% if case.id_document_type == "身分證" %}selected{% endif %}>身分證</option>
+              <option value="居留證" {% if case.id_document_type == "居留證" %}selected{% endif %}>居留證</option>
+              <option value="護照" {% if case.id_document_type == "護照" %}selected{% endif %}>護照</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>身分證件號碼</label>
+            <input type="text" name="id_document_no" value="{{ case.id_document_no }}">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step2 聯絡資訊 -->
+      <div class="form-section">
+        <h2><i class="fas fa-phone"></i> 聯絡資訊</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label>手機</label>
+            <input type="tel" name="mobile_phone" value="{{ case.mobile_phone }}">
+          </div>
+          <div class="form-group">
+            <label>電話</label>
+            <input type="tel" name="telephone" value="{{ case.telephone }}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>地址</label>
+          <input type="text" name="address_full" value="{{ case.address_full }}">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>緊急聯絡人</label>
+            <input type="text" name="emergency_contact" value="{{ case.emergency_contact }}">
+          </div>
+          <div class="form-group">
+            <label>聯絡人電話</label>
+            <input type="tel" name="contact_phone" value="{{ case.contact_phone }}">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2><i class="fas fa-hospital-user"></i> 病房照會過程</h2>
+        <div class="form-group">
+          <label>照會紀錄與詳細情形</label>
+          <textarea name="ward_referral" rows="4">
+{{ case.ward_referral }}</textarea
+          >
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2><i class="fas fa-briefcase"></i> 工作內容</h2>
+        <div class="form-group">
+          <label>目前工作內容</label>
+          <textarea name="current_work" rows="4">
+{{ case.current_work }}</textarea
+          >
+        </div>
+        <div class="form-group">
+          <label>過去工作經歷</label>
+          <textarea name="past_work" rows="4">{{ case.past_work }}</textarea>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2><i class="fas fa-microphone"></i> 語音辨識區</h2>
+        <div class="form-group">
+          <label>語音轉文字內容</label>
+          <textarea id="speechResult" name="speech_result" rows="5">
+{{ case.speech_result }}</textarea
+          >
+          <div class="speech-status" id="speechStatus">
+            準備就緒，點擊按鈕開始
+          </div>
+          <div class="speech-controls">
+            <button
+              type="button"
+              class="voice-btn"
+              onclick="startRecognition()"
+            >
+              <i class="fas fa-microphone"></i> 開始語音辨識
+            </button>
+            <button
+              type="button"
+              class="clear-btn"
+              onclick="clearSpeechResult()"
+            >
+              <i class="fas fa-trash-alt"></i> 清除文字
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button type="submit" class="submit-btn">
+          <i class="fas fa-save"></i> 儲存
+        </button>
+
+        <button type="button" class="voice-btn" onclick="generateAISummary()">
+          <i class="fas fa-robot"></i> AI 一鍵生成摘要
+        </button>
+        <button type="button" class="cancel-btn" onclick="goBack()">
+          <i class="fas fa-arrow-left"></i> 返回
+        </button>
+      </div>
+    </form>
+
+    <script>
+      function goHome() {
+        window.location.href = "/home";
+      }
+      function goBack() {
+        window.location.href = "/step3";
+      }
+    </script>
+  </body>
+</html>

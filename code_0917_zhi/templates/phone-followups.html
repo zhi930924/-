@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>新增電訪記錄</title>
+    <link rel="stylesheet" href="/static/css/return-to-work-form.css" />
+  </head>
+  <body>
+    <header>
+      <img src="/static/image_no_bg2.png" alt="Logo" onclick="goHome()" />
+      <h1>職業災害勞工服務資訊整合管理系統</h1>
+    </header>
+    <div class="title-bar">
+      電訪記錄 / <span class="highlight-red">新增</span>
+    </div>
+      <form action="/submit-phone-followup/{{ case_id }}" method="POST">
+        <label>ADL/IADL 評估</label>
+        <textarea
+          name="injury_assessment_adl_iadl"
+          rows="4"
+          required
+        ></textarea>
+
+        <label>第一次手術日期</label>
+        <input type="date" name="first_surgery_date" />
+
+        <label>是否需要第二次手術</label>
+        <select name="need_second_surgery">
+          <option value="1">是</option>
+          <option value="0">否</option>
+        </select>
+
+        <label>是否正在復健</label>
+        <select name="undergoing_rehabilitation">
+          <option value="1">是</option>
+          <option value="0">否</option>
+        </select>
+
+        <label>復健期間（起）</label>
+        <input type="date" name="rehabilitation_period_start" />
+
+        <label>復健期間（訖）</label>
+        <input type="date" name="rehabilitation_period_end" />
+
+        <label>主要復健醫院</label>
+        <input type="text" name="rehabilitation_hospital" />
+
+        <label>目前是否休養中</label>
+        <select name="currently_resting">
+          <option value="1">是</option>
+          <option value="0">否</option>
+        </select>
+
+        <label>休養期間（起）</label>
+        <input type="date" name="rest_period_start" />
+
+        <label>休養期間（訖）</label>
+        <input type="date" name="rest_period_end" />
+
+        <label>職災補助項目</label>
+        <div class="checkbox-group">
+          <label
+            ><input
+              type="checkbox"
+              name="occupational_injury_compensation"
+              value="交通費"
+            />
+            交通費</label
+          >
+          <label
+            ><input
+              type="checkbox"
+              name="occupational_injury_compensation"
+              value="醫療補助"
+            />
+            醫療補助</label
+          >
+          <label
+            ><input
+              type="checkbox"
+              name="occupational_injury_compensation"
+              value="看護費"
+            />
+            看護費</label
+          >
+        </div>
+
+        <label>目前職務狀態</label>
+        <input
+          type="text"
+          name="job_status"
+          placeholder="例如：待業、在職、已退休"
+        />
+
+        <button type="submit" class="submit-btn">提交記錄</button>
+      </form>
+      <a href="/case-detail/{{ case_id }}" class="back-btn">← 返回個案資料</a>
+    </div>
+  </body>
+</html>

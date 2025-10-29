@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>職業災害勞工服務資訊整合管理系統 - 主畫面</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/home.css') }}"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <!-- 頁首 -->
+    <header>
+      <img
+        src="{{ url_for('static', filename='image_no_bg2.png') }}"
+        alt="Logo"
+        onclick="goHome()"
+        style="cursor: pointer; height: 40px; margin-right: 15px"
+      />
+      <h1>職業災害勞工服務資訊整合管理系統</h1>
+    </header>
+
+    <!-- 導航列 -->
+    <nav>
+      <div><a href="#">首頁</a></div>
+      <div>
+        <a href="#">個案管理</a>
+        <div class="dropdown">
+          <a href="/step1">Step1 新增個案</a>
+          <a href="/step2">Step2 個案訪談</a>
+          <a href="/step3">Step3 預覽編輯</a>
+        </div>
+      </div>
+      <div>
+        <a href="#">電話關懷管理</a>
+        <div class="dropdown">
+          <a href="/phone-month">本月名單</a>
+          <a href="/phone-pending">待完成</a>
+        </div>
+      </div>
+      <div><a href="/case-query">個案查詢</a></div>
+      <div>
+        <a href="#">個管師管理</a>
+        <div class="dropdown">
+          <a href="/profile">個人資料</a>
+          <a href="#">權限管理</a>
+        </div>
+      </div>
+      <div style="margin-left: auto">
+        <a href="#" class="logout-btn" onclick="confirmLogout(event)">登出</a>
+      </div>
+    </nav>
+
+    
+
+    <!-- 主要內容區域 -->
+    <div class="main-container">
+      <!-- 統計數據區域 - 現在是主要內容 -->
+      <div class="dashboard-section">
+        <!-- 統計卡片網格 -->
+        <div class="dashboard-stats-grid">
+          <div class="dashboard-stat-card total">
+            <div class="stat-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number" id="totalCases">-</div>
+              <div class="stat-label">總個案數</div>
+            </div>
+          </div>
+
+          <div class="dashboard-stat-card waiting">
+            <div class="stat-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number" id="waitingInterview">-</div>
+              <div class="stat-label">待個案訪談</div>
+            </div>
+          </div>
+
+          <div class="dashboard-stat-card interviewed">
+            <div class="stat-icon">
+              <i class="fas fa-comments"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number" id="interviewedCases">-</div>
+              <div class="stat-label">已訪談</div>
+            </div>
+          </div>
+
+          <div class="dashboard-stat-card closed">
+            <div class="stat-icon">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number" id="closedCases">-</div>
+              <div class="stat-label">已結案</div>
+            </div>
+          </div>
+
+          <div class="dashboard-stat-card monthly">
+            <div class="stat-icon">
+              <i class="fas fa-calendar-plus"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number" id="monthlyNewCases">-</div>
+              <div class="stat-label">本月新增</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 圖表與數據分析區域 -->
+        <div class="analytics-section">
+          <div class="chart-card">
+            <h3><i class="fas fa-chart-line"></i> 個案趨勢分析</h3>
+            <div class="chart-wrapper">
+              <canvas id="trendChart"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <h3><i class="fas fa-chart-pie"></i> 個案狀態分布</h3>
+            <div class="chart-wrapper">
+              <canvas id="pieChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- 最近個案與提醒區域 -->
+        <div class="info-section">
+          <div class="info-card">
+            <h3><i class="fas fa-clock"></i> 最近新增個案</h3>
+            <div class="table-container">
+              <table class="info-table">
+                <thead>
+                  <tr>
+                    <th>姓名</th>
+                    <th>狀態</th>
+                    <th>日期</th>
+                  </tr>
+                </thead>
+                <tbody id="recentCasesTable">
+                  <tr>
+                    <td colspan="3" style="text-align: center; color: #999;">載入中...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <h3><i class="fas fa-bell"></i> 待處理提醒</h3>
+            <div id="alertsList">
+              <div class="alert-item">
+                <span class="alert-label">載入中...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 功能快捷區域 - 現在是側邊 -->
+      <div class="functions-sidebar">
+        <!-- 快速操作 -->
+        <div class="quick-actions-card">
+          <h3><i class="fas fa-bolt"></i> 快速操作</h3>
+          <div class="quick-buttons">
+            <a href="/step1" class="quick-btn primary">
+              <i class="fas fa-user-plus"></i>
+              <span>新增個案</span>
+            </a>
+            <a href="/step2" class="quick-btn secondary">
+              <i class="fas fa-notes-medical"></i>
+              <span>個案訪談</span>
+            </a>
+            <a href="/step3" class="quick-btn warning">
+              <i class="fas fa-edit"></i>
+              <span>預覽編輯</span>
+            </a>
+            <a href="/case-query" class="quick-btn success">
+              <i class="fas fa-search"></i>
+              <span>個案查詢</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 其他功能 -->
+        <div class="other-functions-card">
+          <h3><i class="fas fa-tools"></i> 其他功能</h3>
+          <div class="function-links">
+            <a href="/phone-month" class="function-link">
+              <i class="fas fa-phone"></i>
+              <span>電話關懷本月名單</span>
+            </a>
+            <a href="/phone-pending" class="function-link">
+              <i class="fas fa-phone-slash"></i>
+              <span>電話關懷待完成</span>
+            </a>
+            <a href="/profile" class="function-link">
+              <i class="fas fa-user-cog"></i>
+              <span>個人資料管理</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 頁尾 -->
+    <div class="page-footer">
+      <p>© 2024 職業災害勞工服務資訊整合管理系統 - 為勞工安全與健康護航</p>
+    </div>
+
+    <!-- 登出確認彈窗 -->
+    <div class="modal" id="logoutModal">
+      <div class="modal-content">
+        <div class="modal-header">提醒</div>
+        <p>確定要登出嗎？</p>
+        <div class="modal-buttons">
+          <button class="ok-btn" onclick="logout()">OK</button>
+          <button class="no-btn" onclick="closeModal()">NO</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 載入覆蓋層 -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+  </body>
+</html>

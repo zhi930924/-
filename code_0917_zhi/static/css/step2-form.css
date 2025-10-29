@@ -1,0 +1,513 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  color: #333;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+header {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+header img {
+  height: 40px;
+  margin-right: 15px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  border-radius: 6px;
+}
+
+header img:hover {
+  transform: scale(1.05);
+}
+
+header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* 標題列 */
+.title-bar {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title-bar .highlight-red {
+  color: #f1c40f;
+  font-weight: 700;
+}
+
+/* 表單容器 */
+.form-section {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  margin: 20px auto;
+  max-width: 1200px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+}
+
+.form-section h2 {
+  font-size: 18px;
+  color: #2980b9;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 3px solid #3498db;
+  padding-bottom: 8px;
+  font-weight: 600;
+}
+
+.form-section h2 i {
+  color: #3498db;
+  font-size: 16px;
+}
+
+/* 表單行布局 */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  margin-bottom: 25px;
+  align-items: start;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+/* 輸入框樣式 */
+input[type="text"],
+input[type="date"],
+input[type="time"],
+input[type="tel"],
+input[type="email"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 14px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  box-sizing: border-box;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+input[readonly] {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* 下拉選單 */
+select {
+  padding: 12px 16px;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") no-repeat right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 40px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* 確保動態載入的下拉選單也有相同樣式 */
+select[name="industry_minor"] {
+  padding: 12px 16px;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") no-repeat right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 40px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+select:disabled {
+  background-color: #f8f9fa;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* 文字區域 */
+textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+}
+
+.autosize-textarea {
+  min-height: 40px;
+  resize: none;
+}
+
+/* 選項組件 */
+.radio-group,
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 8px;
+}
+
+.radio-group label,
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: normal;
+  cursor: pointer;
+  margin-bottom: 0;
+  font-size: 14px;
+}
+
+.checkbox-group.nowrap {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 5px;
+}
+
+.checkbox-inline-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.checkbox-inline-group label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 0;
+}
+
+/* 習慣輸入行 */
+.habit-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+  margin-top: 8px;
+}
+
+.habit-line label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-weight: normal;
+  margin-bottom: 0;
+}
+
+.short-select {
+  width: 80px;
+  min-width: 80px;
+}
+
+/* 複選框行 */
+.checkbox-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.checkbox-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: normal;
+  margin-bottom: 0;
+}
+
+/* 按鈕區域 */
+.button-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 40px auto 20px;
+  max-width: 1200px;
+  padding: 0 25px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.report-box {
+  background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+  padding: 15px 25px;
+  border: 2px solid #28a745;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.1);
+}
+
+.button-group {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.2);
+}
+
+.cancel-btn {
+  background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(149, 165, 166, 0.2);
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.cancel-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(149, 165, 166, 0.3);
+}
+
+/* 響應式設計 */
+@media (max-width: 1024px) {
+  .form-section {
+    margin: 15px;
+    padding: 20px;
+  }
+
+  .form-row {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  header h1 {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 12px 15px;
+  }
+
+  header h1 {
+    font-size: 14px;
+  }
+
+  .title-bar {
+    padding: 12px 15px;
+    font-size: 14px;
+  }
+
+  .form-section {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .form-section h2 {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .button-row {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 15px;
+  }
+
+  .report-box {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .button-group {
+    justify-content: center;
+  }
+
+  .habit-line {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .checkbox-group.nowrap {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .checkbox-inline-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .checkbox-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-section {
+    margin: 5px;
+    padding: 12px;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="time"],
+  input[type="tel"],
+  input[type="email"],
+  input[type="number"],
+  select,
+  textarea {
+    padding: 10px 12px;
+    font-size: 16px; /* 防止iOS縮放 */
+  }
+
+  .submit-btn,
+  .cancel-btn {
+    padding: 14px 20px;
+    width: 100%;
+  }
+
+  .button-group {
+    width: 100%;
+  }
+
+  .button-group .submit-btn,
+  .button-group .cancel-btn {
+    flex: 1;
+  }
+}
+
+/* 特殊輸入框樣式 */
+.inline-input {
+  margin-left: 8px;
+  width: 120px;
+  display: inline-block;
+}
+
+/* 錯誤狀態 */
+.error {
+  border-color: #e74c3c !important;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1) !important;
+}
+
+/* 成功狀態 */
+.success {
+  border-color: #27ae60 !important;
+  box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1) !important;
+}
+
+/* 載入指示器 */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* 改善復選框和單選框樣式 */
+input[type="checkbox"],
+input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: #3498db;
+}
+
+/* 改善標籤間距 */
+label {
+  cursor: pointer;
+}
+
+/* 表單驗證提示 */
+.field-error {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.field-success {
+  color: #27ae60;
+  font-size: 12px;
+  margin-top: 4px;
+}

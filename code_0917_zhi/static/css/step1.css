@@ -1,0 +1,434 @@
+@import url('./design-system.css');
+
+/* ================================
+   Step1 表單頁面樣式 - 與Step2、3一致的設計
+   ================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "微軟正黑體", "Microsoft JhengHei", sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  color: #333;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ================================
+   頁首設計 - 與Step2、3一致
+   ================================ */
+
+header {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 15px 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+header img {
+  height: 45px;
+  margin-right: 20px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  border-radius: 8px;
+}
+
+header img:hover {
+  transform: scale(1.05);
+}
+
+header h1 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* ================================
+   標題列 - 與Step2、3一致
+   ================================ */
+
+.title-bar {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  padding: 18px 40px;
+  font-size: 18px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title-bar .highlight {
+  color: #f1c40f;
+  font-weight: 700;
+}
+
+/* ================================
+   主容器
+   ================================ */
+
+main.container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+/* ================================
+   表單容器 - 與Step2、3一致
+   ================================ */
+
+form {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid #e1e8ed;
+  margin-bottom: 30px;
+}
+
+.form-content {
+  padding: 30px;
+}
+
+.form-section {
+  margin-bottom: 30px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #f1f2f6;
+}
+
+.form-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-size: 18px;
+  color: #2980b9;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 3px solid #3498db;
+  padding-bottom: 8px;
+  font-weight: 600;
+}
+
+.section-icon {
+  color: #3498db;
+  font-size: 16px;
+}
+
+/* ================================
+   表單控件 - 與Step2、3一致
+   ================================ */
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-size: 15px;
+  position: relative;
+}
+
+.form-control,
+input[type="text"],
+input[type="date"],
+select {
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px solid #e1e8ed;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: white;
+  box-sizing: border-box;
+  color: #2c3e50;
+  font-weight: 500;
+  font-family: inherit;
+}
+
+.form-control:focus,
+input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.form-control::placeholder,
+input::placeholder {
+  color: #7f8c8d;
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* 下拉選單樣式 */
+select {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='%233498db' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 12L3 7h10l-5 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 20px center;
+  background-size: 16px;
+  padding-right: 50px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+}
+
+/* ================================
+   按鈕設計 - 與Step2、3一致
+   ================================ */
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 40px;
+  padding: 30px;
+  background: #f8f9fa;
+  border-top: 1px solid #e5e7eb;
+  flex-wrap: wrap;
+}
+
+.cancel-btn,
+.submit-btn {
+  padding: 15px 32px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 140px;
+}
+
+.cancel-btn {
+  background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+  color: white;
+}
+
+.cancel-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(149, 165, 166, 0.3);
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  color: white;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+/* ================================
+   成功/錯誤訊息 - 與Step2、3一致
+   ================================ */
+
+.success-message,
+.error-message {
+  padding: 20px 25px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.success-message {
+  background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(46, 204, 113, 0.1));
+  color: #27ae60;
+  border: 1px solid rgba(39, 174, 96, 0.2);
+}
+
+.error-message {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1));
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+/* ================================
+   必填欄位標記
+   ================================ */
+
+.required-field::after {
+  content: ' *';
+  color: #e74c3c;
+  font-weight: 700;
+}
+
+/* ================================
+   自動儲存提示
+   ================================ */
+
+#saveNotice {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ================================
+   彈窗樣式
+   ================================ */
+
+#alertModal,
+#returnModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+#alertModal > div,
+#returnModal > div {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  max-width: 400px;
+  margin: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+#modalMessage {
+  color: #2c3e50;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* ================================
+   響應式設計
+   ================================ */
+
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  main.container {
+    padding: 0 15px;
+    margin: 20px auto;
+  }
+
+  header {
+    padding: 12px 20px;
+  }
+
+  header h1 {
+    font-size: 18px;
+  }
+
+  .title-bar {
+    padding: 15px 20px;
+    font-size: 16px;
+  }
+
+  .form-content {
+    padding: 20px 15px;
+  }
+
+  .section-title {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .button-group {
+    flex-direction: column;
+    padding: 20px 15px;
+    gap: 15px;
+  }
+
+  .cancel-btn,
+  .submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  main.container {
+    padding: 0 10px;
+    margin: 15px auto;
+  }
+
+  header {
+    padding: 10px 15px;
+  }
+
+  header h1 {
+    font-size: 16px;
+  }
+
+  header img {
+    height: 35px;
+  }
+
+  .title-bar {
+    padding: 12px 15px;
+    font-size: 14px;
+  }
+
+  .form-content {
+    padding: 15px 12px;
+  }
+
+  .form-control,
+  input[type="text"],
+  input[type="date"],
+  select {
+    padding: 14px 16px;
+    font-size: 16px;
+  }
+}

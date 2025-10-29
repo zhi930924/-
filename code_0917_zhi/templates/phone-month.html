@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>本月名單</title>
+    <link rel="stylesheet" href="/static/css/phone-month.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <img src="/static/image_no_bg2.png" alt="Logo" onclick="goHome()" />
+      <h1>職業災害勞工服務資訊整合管理系統</h1>
+    </header>
+
+    <div class="title-bar">電話關懷管理 / <span>本月名單</span></div>
+
+    <main class="container">
+      <!-- 統計卡片區域 -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="number" id="totalCases">0</div>
+          <div class="label">總個案數</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="completedCases">0</div>
+          <div class="label">已完成</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="pendingCases">0</div>
+        <div class="label">待完成</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="closedCases">0</div>
+          <div class="label">已結案</div>
+        </div>
+      </div>
+
+      <!-- 篩選與搜尋區域 -->
+      <div class="filter-container">
+        <div class="filter-form">
+          <div class="form-group">
+            <label for="searchInput">搜尋條件</label>
+            <input type="text" id="searchInput" placeholder="請輸入病歷號或姓名" />
+          </div>
+          <div class="form-group">
+            <label for="statusFilter">狀態篩選</label>
+            <select id="statusFilter">
+              <option value="">全部狀態</option>
+              <option value="已完成">已完成</option>
+              <option value="未完成">未完成</option>
+              <option value="待完成">待完成</option>
+              <option value="結案">已結案</option>
+              <option value="排除">排除</option>
+            </select>
+          </div>
+          <div class="filter-buttons">
+            <button class="search-btn btn-primary">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              搜尋
+            </button>
+            <button class="clear-btn btn-secondary">
+              <i class="fa-solid fa-refresh"></i>
+              清除
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 名單列表區域 -->
+      <div class="list-container">
+        <div class="list-header">
+          <div class="list-title">
+            <i class="fas fa-list"></i>
+            電話關懷名單
+          </div>
+          <div class="list-actions">
+            <button class="btn-export">
+              <i class="fas fa-download"></i>
+              匯出Excel
+            </button>
+            <button class="btn-batch-update">
+              <i class="fas fa-edit"></i>
+              批量更新
+            </button>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="phone-table">
+            <thead>
+              <tr>
+                <th>
+                  <input type="checkbox" id="selectAll" />
+                </th>
+                <th>病歷號</th>
+                <th>姓名</th>
+                <th>聯絡電話</th>
+                <th>評估時間</th>
+                <th>狀態</th>
+                <th>原因</th>
+                <th>最後更新</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="caseTable">
+              {% for case in cases %}
+              <tr>
+                <td>
+                  <input type="checkbox" class="case-checkbox" data-id="{{ case.medical_record_no }}" />
+                </td>
+                <td class="medical-record">{{ case.medical_record_no }}</td>
+                <td class="patient-name">{{ case.patient_name or '未填寫' }}</td>
+                <td class="phone-number">{{ case.mobile_phone or case.telephone or '未填寫' }}</td>
+                <td>{{ case.assess_date or '-' }}</td>
+                <td>
+                  <div class="status-select-wrapper">
+                    <select name="status" data-id="{{ case.medical_record_no }}" class="status-select">
+                      <option value="已完成" {% if case.phone_status == "已完成" %}selected{% endif %}>已完成</option>
+                      <option value="未完成" {% if not case.phone_status or case.phone_status == "未完成" %}selected{% endif %}>未完成</option>
+                      <option value="待完成" {% if case.phone_status == "待完成" %}selected{% endif %}>待完成</option>
+                      <option value="結案" {% if case.phone_status == "結案" %}selected{% endif %}>結案</option>
+                      <option value="排除" {% if case.phone_status == "排除" %}selected{% endif %}>排除</option>
+                    </select>
+                  </div>
+                </td>
+                <td>
+                  <div class="reason-select-wrapper">
+                    <select name="reason" data-id="{{ case.medical_record_no }}" class="reason-select">
+                      <option value="完畢" {% if case.phone_reason == "完畢" %}selected{% endif %}>完畢</option>
+                      <option value="未接" {% if case.phone_reason == "未接" %}selected{% endif %}>未接</option>
+                      <option value="復工" {% if case.phone_reason == "復工" %}selected{% endif %}>復工</option>
+                      <option value="拒接" {% if case.phone_reason == "拒接" %}selected{% endif %}>拒接</option>
+                      <option value="-" {% if not case.phone_reason or case.phone_reason == "-" %}selected{% endif %}>-</option>
+                    </select>
+                  </div>
+                </td>
+                <td>{{ case.phone_updated_at or '-' }}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-call" data-phone="{{ case.mobile_phone or case.telephone }}" title="撥打電話">
+                      <i class="fas fa-phone"></i>
+                    </button>
+                    <button class="btn-record" onclick="window.location.href='/phone-followups/{{ case.medical_record_no }}'" title="新增紀錄">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="save-btn" data-id="{{ case.medical_record_no }}" title="儲存變更">
+                      <i class="fas fa-save"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 分頁控制 -->
+        <div class="pagination">
+          <div class="pagination-info">
+            顯示第 <span id="currentStart">1</span> - <span id="currentEnd">10</span> 筆，共 <span id="totalRecords">0</span> 筆
+          </div>
+          <div class="pagination-buttons">
+            <button class="pagination-btn" id="prevBtn" disabled>上一頁</button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn" id="nextBtn">下一頁</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="/static/js/phone-month.js"></script>
+  </body>
+</html>

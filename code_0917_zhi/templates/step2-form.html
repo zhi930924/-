@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Step2 個案訪談填寫</title>
+    <link rel="stylesheet" href="/static/css/step2-form.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <script src="/static/js/step2-form.js"></script>
+    <script src="/static/js/zipcode-data.js"></script>
+    <script src="/static/js/step2-form-full.js"></script>
+  </head>
+  <body>
+    <header>
+      <img src="/static/image_no_bg2.png" alt="Logo" onclick="goHome()" />
+      <h1>職業災害勞工服務資訊整合管理系統</h1>
+    </header>
+
+    <div class="title-bar">
+      個案管理 / Step2 個案訪談 / <span class="highlight-red">新增</span>
+    </div>
+
+    <form action="/submit-step2/{{ case.medical_record_no }}" method="POST">
+      <div class="form-section">
+        <h2><i class="fas fa-user"></i> 個案基本資料</h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>病歷號</label>
+            <input
+              type="text"
+              name="medical_record_no"
+              value="{{ case.medical_record_no }}"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label>姓名</label>
+            <input
+              type="text"
+              name="patient_name"
+              value="{{ case.patient_name }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>出生日期</label>
+            <input
+              type="date"
+              name="birth_date"
+              value="{{ case.birth_date }}"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>性別</label>
+            <select name="gender" data-value="{{ case.gender }}">
+              <option value="" disabled selected hidden>請選擇</option>
+              <option value="1">男</option>
+              <option value="2">女</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>身分證號類別</label>
+            <select
+              name="id_document_type"
+              data-value="{{ case.id_document_type }}"
+            >
+              <option value="" disabled selected hidden>請選擇</option>
+              <option value="1">身分證號</option>
+              <option value="2">護照號碼</option>
+              <option value="3">居留證號</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>身分證號</label>
+            <input
+              type="text"
+              name="id_document_no"
+              value="{{ case.id_document_no }}"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>初診日期</label>
+            <input
+              type="date"
+              name="first_visit_date"
+              value="{{ case.first_visit_date }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>訪談地點</label>
+            <select
+              name="interview_location"
+              data-value="{{ case.interview_location }}"
+            >
+              <option value="" disabled selected hidden>請選擇</option>
+              <option value="門診">門診</option>
+              <option value="病房">病房</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>教育程度</label>
+            <select
+              name="education_level"
+              data-value="{{ case.education_level }}"
+            >
+              <option value="" disabled selected hidden>請選擇</option>
+              <option value="不識字">不識字</option>
+              <option value="小學">小學</option>
+              <option value="國中">國中</option>
+              <option value="高中(職)">高中(職)</option>
+              <option value="大學(專)">大學(專)</option>
+              <option value="研究所以上">研究所以上</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>婚姻狀況</label>
+            <select
+              id="marital_status"
+              name="marital_status"
+              data-value="{{ case.marital_status }}"
+            >
+              <option value="" disabled selected hidden>請選擇</option>
+              <option value="未婚">未婚</option>
+              <option value="已婚">已婚</option>
+              <option value="離婚">離婚</option>
+              <option value="喪偶">喪偶</option>
+              <option value="其他">其他</option>
+            </select>
+            <input
+              type="text"
+              id="marital_status_other"
+              name="marital_status_other"
+              placeholder="請輸入其他婚姻狀況"
+              style="display: none; margin-top: 8px"
+            />
+          </div>
+
+          <div class="form-group" style="flex: 2">
+            <label>身分別</label>
+            <div class="checkbox-group nowrap">
+              {% for label in
+              ['一般','原住民','外籍移工','未滿18歲(含實習建教生)'] %}
+              <label>
+                <input type="checkbox" name="identity_status" value="{{ label
+                }}" {% if label in case.identity_status|default('') %}checked{%
+                endif %} /> {{ label }}
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>宗教信仰</label>
+            <select
+              id="religion"
+              name="religion"
+              data-value="{{ case.religion }}"
+            >
+              <option value="" disabled selected hidden>請選擇</option>
+              <option value="民間信仰">民間信仰</option>
+              <option value="佛教">佛教</option>
+              <option value="道教">道教</option>
+              <option value="基督教">基督教</option>
+              <option value="天主教">天主教</option>
+              <option value="其他">其他</option>
+            </select>
+            <input
+              type="text"
+              id="religion_other"
+              name="religion_other"
+              placeholder="請輸入其他宗教信仰"
+              style="display: none; margin-top: 8px"
+            />
+          </div>
+
+          <div class="form-group" style="flex: 2">
+            <label>特殊身份（複選）</label>
+            <div class="checkbox-group nowrap">
+              {% for label in ['無','低收入戶','榮民','重大傷病','身心障礙'] %}
+              <label>
+                <input type="checkbox" name="special_identity" value="{{ label
+                }}" {% if label in case.special_identity|default('') %}checked{%
+                endif %} onchange="toggleSpecialIdentityOther(this)" /> {{ label
+                }}
+              </label>
+              {% endfor %}
+              <label>
+                <input type="checkbox" name="special_identity" value="其他" {%
+                if '其他' in case.special_identity|default('') %}checked{% endif
+                %} onchange="toggleSpecialIdentityOther(this)" /> 其他
+              </label>
+              <input
+                type="text"
+                id="special_identity_other"
+                name="special_identity_other"
+                placeholder="請輸入其他特殊身份"
+                value="{{ case.special_identity_other }}"
+                style="
+                  display: none;
+                  width: 200px;
+                  margin-top: -10px;
+                  margin-left: -10px;
+                "
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2><i class="fas fa-home"></i> 聯絡與居住資訊</h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>市內電話</label>
+            <input type="text" name="telephone" value="{{ case.telephone }}" />
+          </div>
+          <div class="form-group">
+            <label>行動電話</label>
+            <input
+              type="text"
+              name="mobile_phone"
+              value="{{ case.mobile_phone }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>郵遞區號</label>
+            <input
+              type="text"
+              id="address_zip"
+              name="address_zip"
+              value="{{ case.address_zip }}"
+              readonly
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>地址 - 縣市</label>
+            <select
+              id="address_city"
+              name="address_city"
+              data-value="{{ case.address_city }}"
+            >
+              <option value="" disabled selected hidden>請選擇</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>地址 - 區域</label>
+            <select
+              id="address_district"
+              name="address_district"
+              data-value="{{ case.address_district }}"
+            >
+              <option value="" disabled selected hidden>請選擇</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>詳細地址</label>
+            <input
+              type="text"
+              name="address_full"
+              value="{{ case.address_full }}"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2><i class="fas fa-phone-alt"></i> 緊急聯絡人資訊</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label>緊急聯絡人</label>
+            <input
+              type="text"
+              name="emergency_contact"
+              value="{{ case.emergency_contact }}"
+            />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>關係</label>
+              <select
+                id="contact_relationship_select"
+                name="contact_relationship"
+                data-value="{{ case.contact_relationship }}"
+                style="width: 300px"
+              >
+                <option value="" disabled selected hidden>請選擇</option>
+                <option value="配偶">配偶</option>
+                <option value="父親">父親</option>
+                <option value="母親">母親</option>
+                <option value="姊妹">姊妹</option>
+                <option value="兄弟">兄弟</option>
+                <option value="子女">子女</option>
+                <option value="親戚">親戚</option>
+                <option value="朋友">朋友</option>
+                <option value="雇主">雇主</option>
+                <option value="同事">同事</option>
+                <option value="其他">其他</option>
+              </select>
+              <input
+                type="text"
+                id="relationship_other_group"
+                name="contact_relationship_other"
+                placeholder="請輸入其他關係"
+                style="display: none; margin-top: 8px"
+                value="{{ case.contact_relationship_other }}"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>聯絡電話</label>
+            <input
+              type="text"
+              name="contact_phone"
+              value="{{ case.contact_phone }}"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2><i class="fas fa-notes-medical"></i> 生活習慣與病史紀錄</h2>
+
+        <!-- 抽菸習慣 -->
+        <div class="form-group">
+          <label>抽菸習慣</label>
+          <div class="habit-line">
+            <label
+              ><input type="radio" name="smoke_type" value="never" />
+              從未</label
+            >
+            <label>
+              <input type="radio" name="smoke_type" value="daily" /> 有，每天
+              <select name="smoke_daily_count" class="short-select">
+                <option value="">根</option>
+                {% for i in range(1, 101) %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+              </select>
+              根，已經
+              <select name="smoke_daily_years" class="short-select">
+                <option value="">年</option>
+                {% for i in range(1, 101) %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+              </select>
+              年
+            </label>
+            <label>
+              <input type="radio" name="smoke_type" value="quit" /> 已戒菸，
+              <select name="smoke_quit_years" class="short-select">
+                <option value="">年</option>
+                {% for i in range(1, 101) %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+              </select>
+              年
+            </label>
+          </div>
+        </div>
+
+        <!-- 檳榔習慣 -->
+        <div class="form-group">
+          <label>檳榔習慣</label>
+          <div class="habit-line">
+            <label
+              ><input type="radio" name="betel_type" value="never" />
+              從未</label
+            >
+            <label>
+              <input type="radio" name="betel_type" value="daily" /> 每天吃：
+              <select name="betel_daily_count" class="short-select">
+                <option value="">顆</option>
+                {% for i in range(1, 101) %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+              </select>
+              顆，已經
+              <select name="betel_daily_years" class="short-select">
+                <option value="">年</option>
+                {% for i in range(1, 101) %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+              </select>
+              年
+            </label>
+            <label>
+              <input type="radio" name="betel_type" value="sometimes" />
+              偶爾吃，
+              <select name="betel_sometimes_years" class="short-select">
+                <option value="">年</option>
+                {% for i in range(1, 101) %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+              </select>
+              年
+            </label>
+            <label>
+              <input type="radio" name="betel_type" value="quit" /> 已戒檳榔，
+              <select name="betel_quit_years" class="short-select">
+                <option value="">年</option>
+                {% for i in range(1, 101) %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+              </select>
+              年
+            </label>
+          </div>
+        </div>
+
+        <!-- 飲酒習慣 -->
+        <div class="form-group">
+          <label>飲酒習慣</label>
+          <div class="radio-group">
+            <label
+              ><input type="radio" name="drinking_habit" value="從未" />
+              從未</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="drinking_habit"
+                value="淺嚐(每月1次)"
+              />
+              淺嚐（每月1次）</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="drinking_habit"
+                value="偶爾(每月2~4次)"
+              />
+              偶爾（每月2~4次）</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="drinking_habit"
+                value="經常(每週≧2次)"
+              />
+              經常（每週≧2次）</label
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>相關疾病史</label>
+          <div class="checkbox-inline-group">
+            <label
+              ><input type="checkbox" name="medical_history" value="高血壓" />
+              高血壓</label
+            >
+            <label
+              ><input type="checkbox" name="medical_history" value="糖尿病" />
+              糖尿病</label
+            >
+            <label
+              ><input type="checkbox" name="medical_history" value="高血脂" />
+              高血脂</label
+            >
+            <label
+              ><input type="checkbox" name="medical_history" value="心臟病" />
+              心臟病</label
+            >
+            <label>
+              <input type="checkbox" name="medical_history" value="手術開刀" />
+              手術開刀：
+              <textarea
+                name="medical_history_surgery"
+                oninput="autoResize(this)"
+                class="autosize-textarea"
+              ></textarea>
+            </label>
+            <label>
+              <input type="checkbox" name="medical_history" value="其他" />
+              其他：
+              <textarea
+                name="medical_history_other"
+                oninput="autoResize(this)"
+                class="autosize-textarea"
+              ></textarea>
+            </label>
+          </div>
+        </div>
+
+        <!-- 長期服藥 -->
+        <div class="form-group">
+          <label>長期服藥</label>
+          <div class="radio-group">
+            <label>
+              <input
+                type="radio"
+                name="chronic_medication_flag"
+                value="0"
+                onclick="toggleMedication(false)"
+              />
+              無
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px">
+              <input
+                type="radio"
+                name="chronic_medication_flag"
+                value="1"
+                onclick="toggleMedication(true)"
+              />
+              有，藥物：
+              <textarea
+                name="chronic_medication"
+                oninput="autoResize(this)"
+                class="autosize-textarea"
+                style="width: 100%; min-width: 500px; height: 40px"
+              ></textarea>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 六、工作資訊 -->
+      <div class="form-section">
+        <h2><i class="fas fa-building"></i> 工作資訊</h2>
+
+        <!-- 勞保投保狀況 + 其他欄位 -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>勞保投保狀況</label>
+            <select
+              name="labor_insurance_status"
+              id="labor_insurance_status"
+              data-value="{{ case.labor_insurance_status }}"
+            >
+              <option value="" disabled selected hidden>請選擇</option>
+              <option value="無投保">無投保</option>
+              <option value="公司">公司</option>
+              <option value="公會">公會</option>
+              <option value="其他">其他</option>
+            </select>
+            <input
+              type="text"
+              name="labor_insurance_status_other"
+              id="labor_insurance_status_other"
+              placeholder="請輸入其他投保情形"
+              style="display: none; margin-top: 8px"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>保險種類（可複選）</label>
+            <div class="checkbox-group nowrap">
+              {% for label in ['未投保', '勞保', '健保', '農保', '漁保', '公保',
+              '軍保'] %}
+              <label>
+                <input type="checkbox" name="insurance_types" value="{{ label
+                }}" {% if label in case.insurance_types|default('') %}checked{%
+                endif %}> {{ label }}
+              </label>
+              {% endfor %}
+              <label>
+                <input type="checkbox" name="insurance_types" value="其他" {% if
+                '其他' in case.insurance_types|default('') %}checked{% endif %}
+                onchange="toggleInsuranceOther(this)"> 其他
+              </label>
+              <input
+                type="text"
+                name="insurance_types_other"
+                id="insurance_types_other"
+                placeholder="請輸入其他保險種類"
+                value="{{ case.insurance_types_other }}"
+                style="
+                  display: none;
+                  width: 150px;
+                  margin-top: -10px;
+                  margin-left: -10px;
+                "
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- 公司名稱與職稱 -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>公司名稱</label>
+            <input
+              type="text"
+              name="company_name"
+              value="{{ case.company_name }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>工作職稱</label>
+            <input type="text" name="job_title" value="{{ case.job_title }}" />
+          </div>
+
+          <div class="form-group">
+            <label>工作內容</label>
+            <input
+              type="text"
+              name="current_work"
+              value="{{ case.current_work }}"
+            />
+          </div>
+        </div>
+
+        <!-- 工作地點 -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>工作地點-縣市</label>
+            <input
+              type="text"
+              name="workplace_city"
+              value="{{ case.workplace_city }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>工作地點-區域</label>
+            <input
+              type="text"
+              name="workplace_district"
+              value="{{ case.workplace_district }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>工作地點-郵遞區號</label>
+            <input
+              type="text"
+              name="workplace_zip"
+              value="{{ case.workplace_zip }}"
+            />
+          </div>
+        </div>
+
+        <!-- 職業與行業分類 -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>職業標準分類碼</label>
+            <select
+              id="occupation_code"
+              name="occupation_classification_code"
+              data-value="{{ case.occupation_classification_code }}"
+            >
+              <option value="" disabled selected hidden>請選擇</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>行業別大類</label>
+            <select
+              id="industry_major_category"
+              name="industry_major_category"
+              data-value="{{ case.industry_major_category }}"
+            >
+              <option value="" disabled selected hidden>請選擇</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>行業別細類</label>
+            <select
+              id="industry_minor"
+              name="industry_minor_category"
+              data-value="{{ case.industry_minor_category }}"
+            >
+              <option value="" disabled selected hidden>請選擇</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 年資與作息 -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>工作年資</label>
+            <div style="display: flex; gap: 10px">
+              <select id="work_exp_years" style="width: 100px">
+                <option value="" disabled selected hidden>請選擇</option>
+                {% for y in range(0, 51) %}
+                <option value="{{ y }}">{{ y }} 年</option>
+                {% endfor %}
+              </select>
+
+              <select id="work_exp_months" style="width: 100px">
+                <option value="" disabled selected hidden>請選擇</option>
+                {% for m in range(0, 12) %}
+                <option value="{{ m }}">{{ m }} 月</option>
+                {% endfor %}
+              </select>
+
+              <input
+                type="hidden"
+                name="workExperienceYears"
+                id="workExperienceYears"
+                value="{{ case.workExperienceYears }}"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>一天工作小時</label>
+            <select
+              id="dailyWorkHours"
+              name="dailyWorkHours"
+              data-value="{{ case.dailyWorkHours }}"
+            >
+              <option value="" disabled selected hidden>請選擇</option>
+              {% for h in range(0, 25) %}
+              <option value="{{ h }}">{{ h }} 小時</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>一週工作天數</label>
+            <select
+              id="weeklyWorkDays"
+              name="weeklyWorkDays"
+              data-value="{{ case.weeklyWorkDays }}"
+            >
+              <option value="" disabled selected hidden>請選擇</option>
+              {% for d in range(0, 8) %}
+              <option value="{{ d }}">{{ d }} 天</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2><i class="fas fa-building"></i> 傷病情形與診斷</h2>
+        <div class="form-group">
+          <label><strong>個案來源</strong></label>
+          <div class="habit-line">
+            <!-- 自行掛號 -->
+            <label>
+              <input type="radio" name="case_source" value="自行掛號" />
+              自行掛號
+            </label>
+
+            <!-- 院內轉介 -->
+            <label>
+              <input type="radio" name="case_source" value="院內轉介" />
+              院內轉介
+            </label>
+            <input
+              type="text"
+              name="internal_dept"
+              id="internal_dept"
+              placeholder="住院科別"
+              style="width: 120px"
+            />
+
+            <!-- 其他 -->
+            <label>
+              <input type="radio" name="case_source" value="其他" />
+              其他
+            </label>
+            <input
+              type="text"
+              name="case_source_other"
+              id="case_source_other"
+              placeholder="請輸入其他來源"
+              style="width: 120px"
+            />
+          </div>
+          <div style="display: flex; gap: 40px">
+            <!-- 院外轉介 -->
+            <label
+              style="
+                margin-bottom: 6px;
+                display: flex;
+                gap: 6px;
+                white-space: nowrap;
+                align-items: center;
+                margin-top: 10px;
+              "
+            >
+              <input type="radio" name="case_source" value="院外轉介" />
+              院外轉介
+            </label>
+            <div>
+              <!-- 院外轉介選項（橫向排列） -->
+              <div id="external_type_group" class="habit-line">
+                <label style="margin-top: 10px">
+                  <input type="radio" name="external_type" value="公司" />
+                  公司名稱
+                </label>
+                <input
+                  type="text"
+                  name="external_company"
+                  id="external_company"
+                  placeholder="請輸入公司名稱"
+                  style="width: 120px"
+                />
+
+                <label>
+                  <input type="radio" name="external_type" value="勞工局" />
+                  勞工局
+                </label>
+                <label>
+                  <input type="radio" name="external_type" value="勞保局" />
+                  勞保局
+                </label>
+
+                <label>
+                  <input type="radio" name="external_type" value="工會" />
+                  工會名稱
+                </label>
+                <input
+                  type="text"
+                  name="union_name"
+                  id="union_name"
+                  placeholder="請輸入工會名稱"
+                  style="width: 120px"
+                />
+
+                <label>
+                  <input type="radio" name="external_type" value="法院" />
+                  法院
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>開案原因（複選）</label>
+
+          <!-- 第一排 -->
+          <div
+            class="checkbox-group"
+            style="display: flex; gap: 50px; margin-bottom: 10px"
+          >
+            {% for reason in ['醫療處置', '追蹤檢查', '醫療諮詢',
+            '心理輔導及轉介', '復工配工'] %}
+            <label>
+              <input type="checkbox" name="case_opening_reason" value="{{ reason
+              }}" {% if reason in case.case_opening_reason|default('')
+              %}checked{% endif %}> {{ reason }}
+            </label>
+            {% endfor %}
+          </div>
+
+          <!-- 第二排 -->
+          <div class="checkbox-group" style="display: flex; gap: 50px">
+            {% for reason in ['特作健檢', '勞動力減損', '職業傷病諮詢', '其他']
+            %}
+            <label>
+              <input type="checkbox" name="case_opening_reason" value="{{ reason
+              }}" {% if reason in case.case_opening_reason|default('')
+              %}checked{% endif %} onchange="toggleOpeningReasonOther(this)"> {{
+              reason }}
+            </label>
+            {% endfor %}
+
+            <!-- 其他輸入欄 -->
+            <input
+              type="text"
+              name="case_opening_reason_other"
+              id="case_opening_reason_other"
+              placeholder="請說明"
+              value="{{ case.case_opening_reason_other }}"
+              style="display: none; width: 60%"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>職業傷病認定</label>
+          <div class="radio-group">
+            {% for opt in ['排除職業傷病', '尚待評估', '職病認定', '職病認定',
+            '疑似職業病'] %}
+            <label>
+              <input type="radio" name="occupation_disease_status" value="{{ opt
+              }}" {% if case.occupation_disease_status == opt %}checked{% endif
+              %}> {{ opt }}
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>職業傷病確診日期</label>
+            <input
+              type="date"
+              name="occupation_disease_confirm_date"
+              value="{{ case.occupation_disease_confirm_date }}"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="injury_type"><strong>職傷類型</strong></label>
+            <select name="injury_type" id="injury_type">
+              <option value="">請選擇</option>
+              <!-- 這裡由 JS 動態填入 -->
+            </select>
+
+            <input
+              type="text"
+              name="injury_type_detail"
+              id="injury_type_detail"
+              placeholder="請補充說明"
+              style="display: none; margin-top: 8px"
+            />
+          </div>
+          <div class="form-group">
+            <label for="icd10_code">傷病診斷碼（ICD-10）</label>
+            <select name="icd10_code" id="icd10_code">
+              <option value="">請選擇診斷碼</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>傷病概述</label>
+          <textarea
+            name="injuryDescription"
+            oninput="autoResize(this)"
+            class="autosize-textarea"
+            style="width: 1165px; min-width: 500px; height: 40px"
+          >
+{{ case.injuryDescription }}</textarea
+          >
+        </div>
+      </div>
+
+      <!-- 七、工作型態與作息 -->
+      <div class="form-section">
+        <h2><i class="fas fa-clock"></i> 工作型態與作息</h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>每日上班時間</label>
+            <input
+              type="time"
+              name="daily_work_start_time"
+              value="{{ case.daily_work_start_time }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>每日下班時間</label>
+            <input
+              type="time"
+              name="daily_work_end_time"
+              value="{{ case.daily_work_end_time }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>每月工作天數（起）</label>
+            <input
+              type="text"
+              name="monthly_work_days_start"
+              value="{{ case.monthly_work_days_start }}"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>每月工作天數（迄）</label>
+            <input
+              type="text"
+              name="monthly_work_days_end"
+              value="{{ case.monthly_work_days_end }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>是否為無一定雇主</label>
+            <select
+              name="temporary_worker"
+              data-value="{{ case.temporary_worker }}"
+            >
+              <option value="">請選擇</option>
+              <option value="1">是</option>
+              <option value="0">否</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>工作時間備註</label>
+            <textarea name="work_time_notes">
+{{ case.work_time_notes }}</textarea
+            >
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>工作年資（起）</label>
+            <input
+              type="date"
+              name="work_experience_start"
+              value="{{ case.work_experience_start }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>工作年資（迄）</label>
+            <input
+              type="date"
+              name="work_experience_end"
+              value="{{ case.work_experience_end }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>停止工作時間（起）</label>
+            <input
+              type="date"
+              name="work_stop_start"
+              value="{{ case.work_stop_start }}"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>停止工作時間（迄）</label>
+            <input
+              type="date"
+              name="work_stop_end"
+              value="{{ case.work_stop_end }}"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- 八、職業病與災害診斷 -->
+      <div class="form-section">
+        <h2><i class="fas fa-stethoscope"></i> 職業病與災害診斷</h2>
+
+        <div class="form-group">
+          <label>傷病情形與診斷</label>
+          <textarea name="injury_diagnosis">
+{{ case.injury_diagnosis }}</textarea
+          >
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>石綿相關疾病</label>
+            <select name="asbestos_related_disease">
+              <option value="1">是</option>
+              <option value="0">否</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>游離輻射相關疾病</label>
+            <select name="radiation_related_disease">
+              <option value="1">是</option>
+              <option value="0">否</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>是否符合中央指引</label>
+            <select name="meets_disease_guidelines">
+              <option value="">請選擇</option>
+              <option value="1">是</option>
+              <option value="2">否</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>職業病種類</label>
+            <input
+              type="text"
+              name="occupational_disease_category"
+              value="{{ case.occupational_disease_category }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>特異症狀發病日</label>
+            <input
+              type="date"
+              name="symptom_onset_date"
+              value="{{ case.symptom_onset_date }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>災害類型</label>
+            <input
+              type="text"
+              name="disaster_type"
+              value="{{ case.disaster_type }}"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>災害其他說明</label>
+            <input
+              type="text"
+              name="disaster_other_description"
+              value="{{ case.disaster_other_description }}"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>健保特約機構初診日</label>
+            <input
+              type="date"
+              name="first_nhi_visit_date"
+              value="{{ case.first_nhi_visit_date }}"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- 九、調查與轉介記錄 -->
+      <div class="form-section">
+        <h2><i class="fas fa-search-location"></i> 調查與轉介記錄</h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>是否有群聚現象</label>
+            <select name="cluster_incidence">
+              <option value="">請選擇</option>
+              <option value="1">是</option>
+              <option value="0">否</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>是否現場訪視</label>
+            <select name="site_visit_conducted">
+              <option value="1">是</option>
+              <option value="2">否</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>訪視日期</label>
+            <input
+              type="date"
+              name="site_visit_date"
+              value="{{ case.site_visit_date }}"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>是否有職業病評估報告</label>
+            <select name="disease_report">
+              <option value="1">是</option>
+              <option value="2">否</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>評估報告填具日期</label>
+            <input
+              type="date"
+              name="report_completion_date"
+              value="{{ case.report_completion_date }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>是否有職業醫學證據調查報告書</label>
+            <select name="evidence_report">
+              <option value="1">是</option>
+              <option value="2">否</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>暴露資料是否送達</label>
+            <select name="exposure_data_delivered">
+              <option value="1">是</option>
+              <option value="2">否</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>暴露資料送達日期</label>
+            <input
+              type="date"
+              name="exposure_data_delivery_date"
+              value="{{ case.exposure_data_delivery_date }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>職災保險是否已有結果</label>
+            <select name="insurance_result_available">
+              <option value="1">是</option>
+              <option value="2">否</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>職災保險結果日期</label>
+            <input
+              type="date"
+              name="insurance_result_date"
+              value="{{ case.insurance_result_date }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>其他補償申請情形</label>
+            <textarea name="other_compensation_details">
+{{ case.other_compensation_details }}</textarea
+            >
+          </div>
+          <div class="form-group">
+            <label>結案日期</label>
+            <input
+              type="date"
+              name="case_closed_date"
+              value="{{ case.case_closed_date }}"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>是否轉介職能復健</label>
+            <select name="rehabilitation_referral_flag">
+              <option value="1">是</option>
+              <option value="0">否</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 十、其他紀錄與追蹤 -->
+      <div class="form-section">
+        <h2><i class="fas fa-clipboard-list"></i> 其他紀錄與追蹤</h2>
+
+        <div class="form-group">
+          <label>開案原因（複選）</label>
+          <textarea name="caseOpeningReasons">
+{{ case.caseOpeningReasons }}</textarea
+          >
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>乙診開立</label>
+            <input
+              type="text"
+              name="diagnosisReport"
+              value="{{ case.diagnosisReport }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>服務時間</label>
+            <input
+              type="text"
+              name="serviceTime"
+              value="{{ case.serviceTime }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>下次追蹤日期</label>
+            <input
+              type="date"
+              name="nextFollowUpDate"
+              value="{{ case.nextFollowUpDate }}"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>服務紀錄</label>
+          <textarea name="serviceRecords">{{ case.serviceRecords }}</textarea>
+        </div>
+      </div>
+
+      <!-- 十一、待協助事項（複選） -->
+      <div class="form-section">
+        <h2><i class="fas fa-hands-helping"></i> 待協助事項</h2>
+
+        <div class="checkbox-row">
+          {% for label in [ '無待協助事項', '需確定診斷：轉診他科/或安排檢查',
+          '1.病歷', '2.投保紀錄', '3.工作照片或影像', '1.現場訪談',
+          '2.動作模擬', '需查詢相關佐證文件', '尚待完成報告書',
+          '已完成報告書，可進行通報', '不需撰寫報告，可刪除通報',
+          '復工準備服務', '職能重建服務（工強）', '1.院內其他科',
+          '2.院外其他科', '3.其他醫院', '4.FAP', '職業重建協助', '職務再設計' ]
+          %}
+          <label>
+            <input type="checkbox" name="assistance_needed" value="{{ label }}"
+            {% if label in case.assistance_needed|default('') %}checked{% endif
+            %}/> {{ label }}
+          </label>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          <label>其他</label>
+          <input
+            type="text"
+            name="assistance_needed_other"
+            value="{{ case.assistance_needed_other }}"
+          />
+        </div>
+      </div>
+
+      <!-- 十二、需求評估 -->
+      <div class="form-section">
+        <h2><i class="fas fa-tasks"></i> 需求評估</h2>
+
+        <div class="checkbox-row">
+          {% for label in [ '檢查/檢驗/評估', '診斷', '治療', '特殊檢查追蹤',
+          '離轉醫/退保後檢查', '醫療諮詢', '職業病診斷', '勞保特約診斷',
+          '排除職業病', '尚待評估', '職病認定', '職傷認定', '疑似職業病' ] %}
+          <label>
+            <input type="checkbox" name="case_assessment_needs" value="{{ label
+            }}" {% if label in case.case_assessment_needs|default('')
+            %}checked{% endif %}/> {{ label }}
+          </label>
+          {% endfor %}
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>職業病認定日期</label>
+            <input
+              type="date"
+              name="disease_recognition_date"
+              value="{{ case.disease_recognition_date }}"
+            />
+          </div>
+          <div class="form-group">
+            <label>其他</label>
+            <input
+              type="text"
+              name="case_assessment_needs_other"
+              value="{{ case.case_assessment_needs_other }}"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- 十三、個案來源與職傷分類 -->
+      <div class="form-section">
+        <h2><i class="fas fa-clipboard-check"></i> 個案來源與職傷分類</h2>
+
+        <div class="form-group">
+          <label>個案來源補充</label>
+          <textarea name="case_source_additional">
+{{ case.case_source_additional }}</textarea
+          >
+        </div>
+        <div class="form-group">
+          <label>開案原因補充</label>
+          <textarea name="opening_reason_extra">
+{{ case.opening_reason_extra }}</textarea
+          >
+        </div>
+        <div class="form-group">
+          <label>職傷類型</label>
+          <textarea name="injury_type_detail">
+{{ case.injury_type_detail }}</textarea
+          >
+        </div>
+      </div>
+
+      <!-- ✅ 通報資格 + 按鈕共用一行 -->
+      <div class="button-row">
+        <div class="report-box">
+          <label>是否符合通報資格</label>
+          <div class="radio-group">
+            <label
+              ><input type="radio" name="report_qualified" value="1" {% if
+              case.report_qualified == "1" %}checked{% endif %}/> 是</label
+            >
+            <label
+              ><input type="radio" name="report_qualified" value="0" {% if
+              case.report_qualified == "0" %}checked{% endif %}/> 否</label
+            >
+          </div>
+        </div>
+        <div class="button-group">
+          <button type="submit" class="submit-btn">儲存</button>
+          <button type="button" class="cancel-btn" onclick="goBack()">
+            返回
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <script>
+      function goHome() {
+        window.location.href = "/home";
+      }
+      function goBack() {
+        window.location.href = "/step2";
+      }
+    </script>
+  </body>
+</html>

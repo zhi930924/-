@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>職業災害勞工服務資訊整合管理系統 - 登入</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/index.css') }}"
+    />
+  </head>
+  <body>
+    <header>職業災害勞工服務資訊整合管理系統</header>
+
+    {% set first_login = first_login | default(false) %}
+
+    <div class="container">
+      <div class="left-section">
+        <div class="hello-bubble">Hello</div>
+        <img
+          src="{{ url_for('static', filename='image_no_bg1.PNG') }}"
+          alt="系統圖片"
+        />
+        <p>- - - - - 登入遇到問題？ <a href="#">立即尋求協助</a> - - - - -</p>
+      </div>
+
+      <div class="login-box">
+        <h2>LOGIN</h2>
+
+        {% if error %}
+        <div class="error-message" id="errorMessage" style="display: block">
+          {{ error }}
+        </div>
+        {% else %}
+        <div class="error-message" id="errorMessage">請輸入帳號與密碼</div>
+        {% endif %}
+
+        <form
+          id="login-form"
+          action="{{ url_for('handle_login') }}"
+          method="post"
+        >
+          <div class="input-group">
+            <i class="fa-solid fa-user"></i>
+            <input
+              id="staff_id"
+              name="staff_id"
+              type="text"
+              placeholder="帳號"
+              required
+            />
+            <i
+              class="fa-solid fa-circle-xmark icon-right"
+              onclick="document.getElementById('staff_id').value=''"
+            ></i>
+          </div>
+
+          <div class="input-group">
+            <i class="fa-solid fa-lock"></i>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="密碼"
+              required
+            />
+            <i class="fa-solid fa-eye-slash icon-right" id="togglePassword"></i>
+          </div>
+          <button type="button" class="login-btn" onclick="validateForm()">
+            登入
+          </button>
+        </form>
+
+        <div class="links">
+          <p><a href="{{ url_for('forgot_password') }}">忘記密碼？</a></p>
+          <p>
+            <i class="fa-solid fa-star"></i> 首次登入系統帳號密碼皆為職員號
+            <i class="fa-solid fa-star"></i>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 首次登入提醒彈窗 -->
+    <div class="modal" id="firstLoginModal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">提醒</div>
+        <p>首次登入必須變更密碼！</p>
+        <div class="modal-buttons">
+          <button class="ok-btn" onclick="goToChangePassword()">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- JS 引入 -->
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+    {% if first_login %}
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+        showModal(); // 顯示首次登入提醒彈窗
+      });
+    </script>
+    {% endif %}
+  </body>
+</html>

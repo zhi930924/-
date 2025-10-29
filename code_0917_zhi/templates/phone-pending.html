@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>待完成</title>
+    <link rel="stylesheet" href="/static/css/phone-pending.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <img src="/static/image_no_bg2.png" alt="Logo" onclick="goHome()" />
+      <h1>職業災害勞工服務資訊整合管理系統</h1>
+    </header>
+
+    <div class="title-bar">電話關懷管理 / <span>待完成</span></div>
+
+    <main class="container">
+      <div class="info-message">以下為狀態為「待完成」的個案名單。</div>
+      <div class="filter-box">
+        <i class="fa-solid fa-filter"></i> 篩選條件：
+        <label><input type="checkbox" id="filterCheckbox" /> - </label>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>病歷號</th>
+            <th>姓名</th>
+            <th>評估時間</th>
+            <th>狀態</th>
+            <th>更新時間</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="caseTable">
+          {% for case in cases %}
+          <tr>
+            <td>{{ case.medical_record_no }}</td>
+            <td>{{ case.patient_name }}</td>
+            <td>{{ case.assess_date or '-' }}</td>
+            <td>{{ case.phone_status or '-' }}</td>
+            <td>{{ case.updated_at or '-' }}</td>
+            <td>
+              <a href="/phone-month">回主清單</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </main>
+
+    <script>
+      function goHome() {
+        window.location.href = "/home";
+      }
+    </script>
+  </body>
+</html>

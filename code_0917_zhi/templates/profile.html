@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>個人資料管理</title>
+    <link rel="stylesheet" href="/static/css/profile.css" />
+  </head>
+  <body>
+    <!-- 🔵 頁首 -->
+    <header>
+      <img
+        src="/static/image_no_bg2.png"
+        alt="Logo"
+        onclick="goHome()"
+        style="cursor: pointer; height: 40px; margin-right: 15px"
+      />
+      <h1>職業災害勞工服務資訊整合管理系統</h1>
+    </header>
+
+    <!-- 🟡 標題列 -->
+    <div class="title-bar">個管師管理 / 個人資料</div>
+
+    <main class="container">
+      <div class="profile-wrapper">
+        <div class="profile-content">
+          <!-- 左邊：頭像與資訊 -->
+          <div class="profile-avatar">
+            <img src="/static/default-avatar.png" alt="個人頭像" />
+            <div class="staff-info">
+              <p>職員編號：{{ profile.staff_id }}</p>
+              <p>所屬醫院：{{ profile.hospital_name or '' }}</p>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- 右邊表單 -->
+          <form class="profile-form" action="/update-profile" method="POST">
+            <div class="form-group">
+              <label>姓名</label>
+              <input
+                type="text"
+                name="staff_name"
+                value="{{ profile.staff_name or '' }}"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>電子信箱</label>
+              <input
+                type="email"
+                name="email"
+                value="{{ profile.email or '' }}"
+                required
+              />
+            </div>
+
+            <!-- ✅ 這裡是按鈕區 -->
+            <div class="button-group">
+              <button
+                type="button"
+                class="change-pwd-btn"
+                onclick="openChangePwdModal()"
+              >
+                更改密碼
+              </button>
+              <button type="submit" class="save-btn">儲存</button>
+              <button type="button" class="cancel-btn" onclick="goHome()">
+                返回首頁
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <!-- 🔐 密碼變更彈跳視窗 -->
+    <div class="modal" id="changePwdModal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">變更密碼</div>
+        <form id="changePwdForm" onsubmit="submitChangePwd(event)">
+          <div class="input-group">
+            <input
+              type="password"
+              id="oldPassword"
+              placeholder="舊密碼"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <input
+              type="password"
+              id="newPassword"
+              placeholder="新密碼"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <input
+              type="password"
+              id="confirmPassword"
+              placeholder="再次輸入新密碼"
+              required
+            />
+          </div>
+          <div class="modal-buttons">
+            <button type="submit" class="ok-btn">確認</button>
+            <button
+              type="button"
+              class="no-btn"
+              onclick="closeChangePwdModal()"
+            >
+              取消
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- JS -->
+    <script>
+      function goHome() {
+        window.location.href = "/home";
+      }
+    </script>
+    <script src="/static/js/profile.js"></script>
+
+    <!-- ✅ 彈跳提醒視窗 -->
+    <div class="modal" id="alertModal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">提醒</div>
+        <p id="modalMessage">這裡是提醒文字</p>
+        <div class="modal-buttons">
+          <button class="ok-btn" onclick="closeModal()">OK</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
