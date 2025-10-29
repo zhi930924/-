@@ -1,0 +1,393 @@
+from flask import Flask, render_template_string, request
+
+app = Flask(__name__)
+
+HTML_TEMPLATE = """
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>醫院管理系統 - 權限設定</title>
+  <style>
+    :root {
+      --bg: #f2f7fb;
+      --blue: #4a79f7;
+      --ink: #2e2e2e;
+      --shadow: 0 3px 0 rgba(37, 58, 102, 0.18);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+    body {
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(180px 180px at 8% 8%, rgba(105, 152, 255, .18), rgba(105, 152, 255, 0) 70%),
+        radial-gradient(260px 220px at 92% 10%, rgba(255, 167, 120, .18), rgba(255, 167, 120, 0) 70%),
+        radial-gradient(260px 260px at 10% 85%, rgba(122, 198, 255, .16), rgba(122, 198, 255, 0) 70%),
+        radial-gradient(320px 300px at 90% 88%, rgba(255, 190, 150, .16), rgba(255, 190, 150, 0) 70%),
+        var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* 上方導覽列 */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(90deg, #3a68f4, #5b8aff);
+      color: white;
+      display: flex;
+      align-items: center;
+      padding-left: 40px;
+      font-size: 18px;
+      font-weight: 700;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+      letter-spacing: 1px;
+      z-index: 10;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(320px, 440px) 1fr;
+      gap: 60px;
+      max-width: 1200px;
+      width: 100%;
+      margin-top: 40px;
+      align-items: center;
+    }
+
+    /* 左側表單 */
+    .form-list {
+      display: grid;
+      gap: 24px;
+      padding-top: 6px;
+    }
+
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .label {
+      min-width: 72px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      font-size: 22px;
+      color: #3a404c;
+      text-shadow: 0 1px 0 #fff;
+    }
+
+    .control { position: relative; flex: 1; }
+
+    .input,
+    .select {
+      width: 100%;
+      height: 56px;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid #e3e8ef;
+      outline: none;
+      font-size: 18px;
+      padding: 0 18px;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+
+    .input[disabled] {
+      color: #98a1b3;
+      background: #f7f8fb;
+    }
+
+    .select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding-right: 44px;
+    }
+
+    .control .arrow {
+      pointer-events: none;
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 12px solid #6b768a;
+      filter: drop-shadow(0 1px 0 #fff);
+    }
+
+    /* 右側權限視窗 */
+    .modal {
+      position: relative;
+      width: min(720px, 65vw);
+      height: 520px;
+      background: #e2ebf7;
+      border: 1px solid #aebcd1;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(20, 40, 80, 0.18), 0 2px 0 rgba(20, 40, 80, 0.08);
+      display: block;
+    }
+
+    .modal-hd {
+      height: 70px;
+      background: #d7e2f2;
+      border-bottom: 1px solid #b9c6da;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0 18px 0 22px;
+    }
+
+    .hd-search {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid #6e7f9a;
+      position: relative;
+      background: #e7eef9;
+    }
+
+    .hd-search:after {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 2px;
+      background: #6e7f9a;
+      bottom: -5px;
+      right: -4px;
+      transform: rotate(40deg);
+      border-radius: 1px;
+    }
+
+    .modal-bd {
+      height: calc(100% - 70px);
+      background: #dfeaf7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .perm-panel {
+      width: 86%;
+      max-width: 640px;
+      height: 70%;
+      background: linear-gradient(#e7f0fb, #dfe9f7);
+      border: 1px solid #c5d3e6;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+    }
+
+    .perm-title {
+      font-weight: 900;
+      letter-spacing: 0.25em;
+      font-size: 28px;
+      color: #2e3b50;
+      text-shadow: 0 1px 0 #fff;
+    }
+
+    .checks {
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 18px;
+      color: #2e3b50;
+    }
+
+    .checks label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+    }
+
+    .checks input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: #5b7cff;
+      transform: translateY(1px);
+    }
+
+    .confirm-wrap {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .btn-confirm {
+      min-width: 110px;
+      height: 44px;
+      border: none;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #1a2b55;
+      font-weight: 800;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    .btn-confirm:active {
+      transform: translateY(1px);
+    }
+
+    .result {
+      max-width: 820px;
+      margin: 36px auto 0;
+      background: #f0f5ff;
+      border: 1px solid #cfe0ff;
+      border-radius: 12px;
+      padding: 16px 18px;
+      color: #1a2b55;
+      box-shadow: 0 2px 0 rgba(32, 64, 150, 0.08);
+    }
+
+    .result h3 {
+      margin: 0 0 6px 0;
+      font-size: 18px;
+    }
+
+    .result p {
+      margin: 6px 0;
+    }
+
+    @media (max-width: 980px) {
+      main { grid-template-columns: 1fr; }
+      .modal { width: auto; height: 60vh; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>醫院管理系統</header>
+  <main>
+    <!-- 左側：基本資料 -->
+    <div>
+      <div class="form-list">
+        <div class="field">
+          <div class="label">院所</div>
+          <div class="control">
+            <select class="select" name="hospital" required>
+              <option value="" hidden>　</option>
+              <option>高雄醫學大學附設中和紀念醫院</option>
+              <option>高雄醫學大學附設小港醫院</option>
+              <option>高雄市立旗津醫院</option>
+            </select>
+            <span class="arrow"></span>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="label">科室</div>
+          <div class="control">
+            <select class="select" name="department" required>
+              <option value="" hidden>　</option>
+              <option>職病科</option>
+            </select>
+            <span class="arrow"></span>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="label">職位</div>
+          <div class="control">
+            <select class="select" name="position" required>
+              <option value="" hidden>　</option>
+              <option>個管師</option>
+              <option>醫師</option>
+              <option>護士</option>
+            </select>
+            <span class="arrow"></span>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="label">帳號</div>
+          <div class="control">
+            <input class="input" type="text" name="account" placeholder="目前暫不開放修改" disabled>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="label">密碼</div>
+          <div class="control">
+            <input class="input" type="password" name="password" placeholder="目前暫不開放修改" disabled>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右側：權限勾選 -->
+    <div class="modal">
+      <div class="modal-hd">
+        <span class="hd-search" aria-hidden="true"></span>
+      </div>
+      <div class="modal-bd">
+        <div class="perm-panel">
+          <div class="perm-title">權 限 勾 選</div>
+          <div class="checks">
+            <label><input type="checkbox" name="steps" value="Step1"> Step1</label>
+            <label><input type="checkbox" name="steps" value="Step2"> Step2</label>
+            <label><input type="checkbox" name="steps" value="Step3"> Step3</label>
+          </div>
+        </div>
+        <div class="confirm-wrap">
+          <button class="btn-confirm" type="submit">確定</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  {% if result %}
+  <div class="result">
+    <h3>✅ 已送出資料</h3>
+    <p><strong>院所：</strong>{{ result.hospital or "—" }}</p>
+    <p><strong>科室：</strong>{{ result.department or "—" }}</p>
+    <p><strong>職位：</strong>{{ result.position or "—" }}</p>
+    <p><strong>權限：</strong>
+      {% if result.steps and result.steps|length>0 %}
+        {{ result.steps|join("、") }}
+      {% else %}未勾選{% endif %}
+    </p>
+  </div>
+  {% endif %}
+</body>
+</html>
+"""
+
+@app.route("/", methods=["GET", "POST"])
+def home():
+    result = None
+    if request.method == "POST":
+        result = {
+            "hospital": request.form.get("hospital"),
+            "department": request.form.get("department"),
+            "position": request.form.get("position"),
+            "steps": request.form.getlist("steps"),
+        }
+    return render_template_string(HTML_TEMPLATE, result=result)
+
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=5001, debug=True)
